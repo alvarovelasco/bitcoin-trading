@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	
+	<packaging>jar</packaging>
+	<modelVersion>4.0.0</modelVersion>
+	<version>0.0.1</version>
+	<artifactId>bitcoin-trading-core</artifactId>
+	
+	<parent>
+		<groupId>org.sonar.challenge</groupId>
+		<artifactId>bitcoin-trading</artifactId>
+		<version>0.0.1</version>
+		<relativePath>../bitcoin-trading/pom.xml</relativePath>
+	</parent>
+	
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
