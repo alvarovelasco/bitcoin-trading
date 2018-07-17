@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
+import java.util.concurrent.Executors;
 
 import javax.websocket.ClientEndpoint;
 import javax.websocket.ContainerProvider;
@@ -24,16 +25,16 @@ import javax.websocket.server.PathParam;
 public class BitsoSubscriber {
 
 	private Optional<Handler> handler = Optional.empty();
-	
+
 	private final String book;
-	
+
 	private final String type;
-	
+
 	private Session session;
-	
+
 	private final static String ENDPOINT = "wss://ws.bitso.com";
-	
-	private final static String SUBSCRIBE_ACTION = "{ action: 'subscribe', book: '{0}', type: '{1}' }";
+
+	private final static String SUBSCRIBE_ACTION = "{ action: 'subscribe', book: '%s', type: '%s' }";
 
 	public BitsoSubscriber(String book, String type) {
 		this.book = requireNonNull(book);
@@ -42,10 +43,9 @@ public class BitsoSubscriber {
 
 	public void subscribe() {
 		WebSocketContainer container = null;
-		try {		
+		try {
 			container = ContainerProvider.getWebSocketContainer();
-			session = container.
-					connectToServer(this, URI.create(ENDPOINT));
+			session = container.connectToServer(this, URI.create(ENDPOINT));
 
 		} catch (DeploymentException | IOException e) {
 			// FIXME throw restart exception
@@ -57,31 +57,54 @@ public class BitsoSubscriber {
 	public void setHandler(Handler handler) {
 		this.handler = Optional.ofNullable(handler);
 	}
-	
+
 	@OnOpen
-	public void onOpen(Session session, @PathParam("response") String response) throws IOException  {
-		System.err.println(response + " " + session.getId());
+	public void onOpen(Session session) throws IOException {
+		System.out.println(" " + session.getId());
 		this.session = session;
-		session.getBasicRemote().sendText(
-				String.format(SUBSCRIBE_ACTION, book, type));
-		
+		System.out.println(String.format(SUBSCRIBE_ACTION, book, type));
+		session.getBasicRemote().sendText(String.format(SUBSCRIBE_ACTION, book, type));
+
 	}
-	 
- 
+
 	@OnClose
 	public void close() throws IOException {
-		System.err.println(" CLOSE ");
+		System.out.println(" CLOSE ");
 		session.close();
 	}
-	
+
 	@OnMessage
 	public void onMessage(String message) {
-		System.err.println(" MESSAGE " + message);
+		System.out.println(" MESSAGE " + message);
 		handler.orElse(m -> {
 		}).handle(message);
 	}
 
 	public static interface Handler {
 		void handle(String message);
+	}
+
+	public static void main(String[] args) {
+		BitsoSubscriber subscriber = new BitsoSubscriber("btc_mxn", SubscriptionTypes.DIFF_ORDERS.getKeyword());
+		subscriber.setHandler(m -> System.out.println(m));
+		Executors.defaultThreadFactory().newThread(() -> {
+			subscriber.subscribe();
+			while (true) {
+			}
+		}).start();
+
+	}
+	
+	private class Subscribe { 
+		private final String action = "subscribe";
+		
+		private final String type = SubscriptionTypes.DIFF_ORDERS.getKeyword();
+		
+		private final String book;
+		
+		public Subscribe(String book) {
+			this.book = requireNonNull(book);
+		}
+		
 	}
 }
