@@ -5,6 +5,7 @@ import static java.util.Objects.requireNonNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -19,6 +20,7 @@ import org.sonar.challenge.book.net.json.DiffOrderDecoder;
 import org.sonar.challenge.book.net.json.TransformerFactory;
 import org.sonar.challenge.rest.BitsoOrderBookRESTRequest;
 import org.sonar.challenge.websocket.BitsoSubscriber.Handler;
+import org.sonar.challenge.websocket.SubscriptionTypes;
 
 import com.google.gson.Gson;
 
@@ -30,13 +32,23 @@ public class OrderBookSubscribeFeederImpl implements SubscribeFeeder<UpdatedOrde
 
 	private final CreateDiffOrderForBookUpdateCommandContext context = new CreateDiffOrderForBookUpdateCommandContext();
 
-	private List<String> messageQueue = new CopyOnWriteArrayList<>();
+	private List<DiffOrderDecoder> messageQueue = new CopyOnWriteArrayList<>();
 	private final Handler queueMessageHandler = m -> {
-		messageQueue.add(m);
+		DiffOrderDecoder decodedDiffOrder = new Gson().fromJson(m, DiffOrderDecoder.class);
+		if (!Objects.isNull(decodedDiffOrder.getBook()) &&
+				Objects.equals(SubscriptionTypes.DIFF_ORDERS.getKeyword(), decodedDiffOrder.getType())) {
+			messageQueue.add(decodedDiffOrder);
+		}
+
+		System.out.println(" QUEUE!");
 	};
 
 	private final Handler normalDigestHandler = m -> {
 		DiffOrderDecoder decodedDiffOrder = new Gson().fromJson(m, DiffOrderDecoder.class);
+		if (!Objects.equals(SubscriptionTypes.DIFF_ORDERS.getKeyword(), decodedDiffOrder.getType())
+				|| Objects.isNull(decodedDiffOrder.getBook()))
+			return ;
+		
 		OrderBook transformedOrderBook = TransformerFactory.getInstance().getDiffOrderDecoderTransformer()
 				.transform(decodedDiffOrder);
 
@@ -45,7 +57,10 @@ public class OrderBookSubscribeFeederImpl implements SubscribeFeeder<UpdatedOrde
 
 		UpdatedOrderBook updatedOrderBook = new UpdatedOrderBook(updatedBook, transformedOrderBook.getBids(),
 				transformedOrderBook.getAsks());
-		notifySubscriptors(updatedOrderBook);
+		
+		System.out.println(" UPDATED ORDER BOOK " + updatedOrderBook);
+		if (!updatedOrderBook.getNewAsks().isEmpty() || !updatedOrderBook.getNewBids().isEmpty())
+			notifySubscriptors(updatedOrderBook);
 	};
 
 	public OrderBookSubscribeFeederImpl(String bookName) {
@@ -58,18 +73,24 @@ public class OrderBookSubscribeFeederImpl implements SubscribeFeeder<UpdatedOrde
 
 	public void startFeeding() {
 		{
+			// TODO : It must create and provide the executor
 			new SubscribeDiffOrderCommandExecutor(orderBookName, queueMessageHandler, context).execute();
 
 			new OrderBookRESTProvideToContextCommandExecutor(context,
 					TransformerFactory.getInstance().getOrderBookDecordeTransformer(orderBookName),
 					new BitsoOrderBookRESTRequest(orderBookName)).execute();
 
-			new DiffOrderMergeIntoOrderBookCommandExecutor(context, dequeue()).execute();
-			context.getBitsoSubscriber().setHandler(normalDigestHandler);
-			// If some message was queued during the first merge, it's merged again
-			new DiffOrderMergeIntoOrderBookCommandExecutor(context, dequeue()).execute();
+			synchronized (messageQueue) {
+				System.out.println( " BEFORE " + messageQueue);
+				new DiffOrderMergeIntoOrderBookCommandExecutor(context, dequeue()).execute();
+				context.getBitsoSubscriber().setHandler(normalDigestHandler);
+			}
+			System.out.println(" AFTER CHANGING HANDLER: " + messageQueue);
+			// If some message was queued during the first merge, it's merged
+			// again
+//			new DiffOrderMergeIntoOrderBookCommandExecutor(context, dequeue()).execute();
 		}
-		
+
 		UpdatedOrderBook firstOrderBook = new UpdatedOrderBook(context.getOrderBook(), new ArrayList<>(),
 				new ArrayList<>());
 		notifySubscriptors(firstOrderBook);
@@ -77,8 +98,7 @@ public class OrderBookSubscribeFeederImpl implements SubscribeFeeder<UpdatedOrde
 
 	// TODO Extract into another class
 	private List<DiffOrderDecoder> dequeue() {
-		List<DiffOrderDecoder> diffOrderDecoders = messageQueue.stream()
-				.map(m -> new Gson().fromJson(m, DiffOrderDecoder.class)).collect(Collectors.toList());
+		List<DiffOrderDecoder> diffOrderDecoders = new ArrayList<>(messageQueue);
 		messageQueue.clear();
 		return diffOrderDecoders;
 	}
@@ -92,11 +112,7 @@ public class OrderBookSubscribeFeederImpl implements SubscribeFeeder<UpdatedOrde
 
 		OrderBookSubscribeFeederImpl feederImpl = new OrderBookSubscribeFeederImpl("btc_mxn");
 		feederImpl.subscribe(subscription);
-		Executors.newCachedThreadPool().submit(() -> {
-			feederImpl.startFeeding();
-			while (true) {
-			}
-		}).get();
+		feederImpl.startFeeding();
 	}
 
 }

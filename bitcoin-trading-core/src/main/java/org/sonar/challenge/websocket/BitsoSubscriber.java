@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executors;
 
 import javax.websocket.ClientEndpoint;
@@ -15,6 +16,10 @@ import javax.websocket.OnOpen;
 import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
+
+import org.glassfish.tyrus.client.ClientManager;
+
+import com.google.gson.Gson;
 
 /**
  * 
@@ -28,33 +33,31 @@ public class BitsoSubscriber {
 
 	private final String book;
 
-	private final String type;
+	private final SubscriptionTypes type;
 
 	private Session session;
 
 	private final static String ENDPOINT = "wss://ws.bitso.com";
 
-	private final static String SUBSCRIBE_ACTION = "{ action: 'subscribe', book: '%s', type: '%s' }";
 
-	public BitsoSubscriber(String book, String type) {
+	public BitsoSubscriber(String book, SubscriptionTypes type) {
 		this.book = requireNonNull(book);
 		this.type = requireNonNull(type);
 	}
 
 	public void subscribe() {
-		WebSocketContainer container = null;
 		try {
-			container = ContainerProvider.getWebSocketContainer();
-			session = container.connectToServer(this, URI.create(ENDPOINT));
-
-		} catch (DeploymentException | IOException e) {
+			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+			ClientManager clientManager = (ClientManager) container;
+			session = clientManager.asyncConnectToServer(this, URI.create(ENDPOINT)).get();
+		} catch (DeploymentException | InterruptedException | ExecutionException e) {
 			// FIXME throw restart exception
 			e.printStackTrace();
 		} finally {
 		}
 	}
 
-	public void setHandler(Handler handler) {
+	public synchronized void setHandler(Handler handler) {
 		this.handler = Optional.ofNullable(handler);
 	}
 
@@ -62,8 +65,8 @@ public class BitsoSubscriber {
 	public void onOpen(Session session) throws IOException {
 		System.out.println(" " + session.getId());
 		this.session = session;
-		System.out.println(String.format(SUBSCRIBE_ACTION, book, type));
-		session.getBasicRemote().sendText(String.format(SUBSCRIBE_ACTION, book, type));
+		System.out.println(new Gson().toJson(new Subscribe(book, type)));
+		session.getAsyncRemote().sendText(new Gson().toJson(new Subscribe(book, type)));
 
 	}
 
@@ -85,25 +88,22 @@ public class BitsoSubscriber {
 	}
 
 	public static void main(String[] args) {
-		BitsoSubscriber subscriber = new BitsoSubscriber("btc_mxn", SubscriptionTypes.DIFF_ORDERS.getKeyword());
+		BitsoSubscriber subscriber = new BitsoSubscriber("btc_mxn", SubscriptionTypes.DIFF_ORDERS);
 		subscriber.setHandler(m -> System.out.println(m));
-		Executors.defaultThreadFactory().newThread(() -> {
-			subscriber.subscribe();
-			while (true) {
-			}
-		}).start();
+		subscriber.subscribe();
 
 	}
 	
 	private class Subscribe { 
 		private final String action = "subscribe";
 		
-		private final String type = SubscriptionTypes.DIFF_ORDERS.getKeyword();
+		private final String type ;
 		
 		private final String book;
 		
-		public Subscribe(String book) {
+		public Subscribe(String book, SubscriptionTypes type) {
 			this.book = requireNonNull(book);
+			this.type = requireNonNull(type).getKeyword();
 		}
 		
 	}

@@ -32,6 +32,12 @@ public class DiffOrderDecoder {
 		return type;
 	}
 	
+	@Override
+	public String toString() {
+		return "DiffOrderDecoder [type=" + type + ", book=" + book + ", sequence=" + sequence + ", payload=" + payload
+				+ "]";
+	}
+
 	static class PayloadOrder {
 		@SerializedName("d")
 		private long timestamp;
@@ -44,6 +50,9 @@ public class DiffOrderDecoder {
 		
 		@SerializedName("v")
 		private BigDecimal value;
+		
+		@SerializedName("s")
+		private String state;
 		
 		public BigDecimal getAmount() {
 			return amount;
@@ -59,6 +68,10 @@ public class DiffOrderDecoder {
 		
 		public BigDecimal getValue() {
 			return value;
+		}
+		
+		public DiffOrderState getState() {
+			return DiffOrderState.getBy(state);
 		}
 	}
 }
