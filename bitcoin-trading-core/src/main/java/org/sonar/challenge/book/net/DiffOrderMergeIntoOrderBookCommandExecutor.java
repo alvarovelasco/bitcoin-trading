@@ -37,16 +37,16 @@ public final class DiffOrderMergeIntoOrderBookCommandExecutor implements Command
 			throw new RuntimeException("Order book not found");
 		}
 
-		if (diffOrderList.isEmpty())
+		if (diffOrderList.isEmpty()) {
 			return;
-
+		}
 		
 		List<DiffOrderDecoder> resolvedDiffOrderList = diffOrderList.stream().filter(Objects::nonNull).
-				filter(dod -> {System.out.println( dod.toString()); return dod.getSequence() > orderBook.getLastSequenceEntered();})
+				filter(dod ->  dod.getSequence() > orderBook.getLastSequenceEntered())
 				.sorted(Comparator.comparingLong(DiffOrderDecoder::getSequence)).collect(Collectors.toList());
 
 		List<OrderBook> resolvedDiffOrderBooks = resolvedDiffOrderList.stream()
-				.map(dod -> TransformerFactory.getInstance().getDiffOrderDecoderTransformer().transform(dod))
+				.map(TransformerFactory.getInstance().getDiffOrderDecoderTransformer()::transform)
 				.collect(Collectors.toList());
 
 		OrderBook finalOrderBook = merge(orderBook, resolvedDiffOrderBooks);

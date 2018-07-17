@@ -26,7 +26,7 @@ public class TransformerFactory {
 		return INSTANCE;
 	}
 
-	public Transformer<OrderBookDecoder, OrderBook> getOrderBookDecordeTransformer(final String bookName) {
+	public Transformer<OrderBookDecoder, OrderBook> getOrderBookDecoderTransformer(final String bookName) {
 		return new Transformer<OrderBookDecoder, OrderBook>() {
 
 			private final Function<org.sonar.challenge.book.net.json.OrderBookDecoder.Order, Order> getTransformer(

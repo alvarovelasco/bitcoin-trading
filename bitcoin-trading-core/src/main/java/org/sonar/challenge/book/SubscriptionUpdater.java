@@ -1,6 +1,6 @@
 package org.sonar.challenge.book;
 
-public interface Subscription<P> {
+public interface SubscriptionUpdater<P> {
 
 	void onUpdate(P p);
 	

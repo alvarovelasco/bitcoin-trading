@@ -18,6 +18,7 @@ import javax.websocket.WebSocketContainer;
 import javax.websocket.server.PathParam;
 
 import org.glassfish.tyrus.client.ClientManager;
+import org.sonar.challenge.book.net.json.DiffOrderDecoder;
 
 import com.google.gson.Gson;
 
@@ -27,22 +28,25 @@ import com.google.gson.Gson;
  *
  */
 @ClientEndpoint
-public class BitsoSubscriber {
+public class BitsoSubscriber<D> {
 
-	private Optional<Handler> handler = Optional.empty();
+	private Optional<Handler<D>> handler = Optional.empty();
 
 	private final String book;
 
 	private final SubscriptionTypes type;
 
+	private final MessageCoder<D> coder;
+	
 	private Session session;
 
 	private final static String ENDPOINT = "wss://ws.bitso.com";
 
 
-	public BitsoSubscriber(String book, SubscriptionTypes type) {
+	public BitsoSubscriber(String book, SubscriptionTypes type,MessageCoder<D> coder) {
 		this.book = requireNonNull(book);
 		this.type = requireNonNull(type);
+		this.coder = requireNonNull(coder);
 	}
 
 	public void subscribe() {
@@ -57,7 +61,7 @@ public class BitsoSubscriber {
 		}
 	}
 
-	public synchronized void setHandler(Handler handler) {
+	public synchronized void setHandler(Handler<D> handler) {
 		this.handler = Optional.ofNullable(handler);
 	}
 
@@ -79,16 +83,16 @@ public class BitsoSubscriber {
 	@OnMessage
 	public void onMessage(String message) {
 		System.out.println(" MESSAGE " + message);
-		handler.orElse(m -> {
-		}).handle(message);
+		handler.orElse(m -> {}).handle(coder.code(message));
 	}
 
-	public static interface Handler {
-		void handle(String message);
+	public static interface Handler<D> {
+		void handle(D d);
 	}
 
 	public static void main(String[] args) {
-		BitsoSubscriber subscriber = new BitsoSubscriber("btc_mxn", SubscriptionTypes.DIFF_ORDERS);
+		BitsoSubscriber<DiffOrderDecoder> subscriber = new BitsoSubscriber<>("btc_mxn", 
+				SubscriptionTypes.DIFF_ORDERS, new DiffOrderMessageCoder());
 		subscriber.setHandler(m -> System.out.println(m));
 		subscriber.subscribe();
 

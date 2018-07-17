@@ -9,6 +9,9 @@ public class CreateDiffOrderForBookUpdateCommandContext {
 	
 	private BitsoSubscriber bitsoSubscriber;
 	
+	public CreateDiffOrderForBookUpdateCommandContext() {
+	}
+	
 	public void setOrderBook(OrderBook orderBook) {
 		this.orderBook = orderBook;
 	}
