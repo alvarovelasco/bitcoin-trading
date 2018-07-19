@@ -27,6 +27,10 @@ public class OrderBookDecoder {
 		return payload.sequence;
 	}
 	
+	public boolean isSuccess() {
+		return success;
+	}
+	
 	public LocalDateTime getUpdateTime() {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+'SS:SS");
 		return LocalDateTime.parse(payload.updateTime, formatter);

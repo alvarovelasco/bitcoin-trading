@@ -6,6 +6,7 @@ import org.sonar.challenge.book.OrderBook;
 import org.sonar.challenge.book.net.json.OrderBookDecoder;
 import org.sonar.challenge.book.net.json.TransformerFactory.Transformer;
 import org.sonar.challenge.rest.SimpleRESTRequest;
+import org.sonar.challenge.util.GSonBuilder;
 
 import com.google.gson.Gson;
 
@@ -35,7 +36,7 @@ public final class OrderBookRESTProvideToContextCommandExecutor implements Comma
 	public void execute() {
 		String content = simpleRESTRequest.request();
 		
-		OrderBookDecoder decoder = new Gson().fromJson(content, OrderBookDecoder.class);
+		OrderBookDecoder decoder = GSonBuilder.buildStandardGson().fromJson(content, OrderBookDecoder.class);
 		OrderBook orderBook = transformer.transform(decoder);
 		context.setOrderBook(orderBook);
 	}
