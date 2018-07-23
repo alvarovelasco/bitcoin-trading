@@ -1,7 +1,7 @@
-package org.sonar.challenge.book.net;
+package org.sonar.challenge.book.subscription.difford;
 
 import org.sonar.challenge.book.OrderBook;
-import org.sonar.challenge.book.net.json.DiffOrderDecoder;
+import org.sonar.challenge.book.json.DiffOrderDecoder;
 import org.sonar.challenge.websocket.BitsoSubscriber;
 
 public class CreateDiffOrderForBookUpdateCommandContext {

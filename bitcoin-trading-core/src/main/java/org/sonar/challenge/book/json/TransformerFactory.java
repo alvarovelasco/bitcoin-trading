@@ -1,4 +1,4 @@
-package org.sonar.challenge.book.net.json;
+package org.sonar.challenge.book.json;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -8,7 +8,7 @@ import java.util.function.Function;
 
 import org.sonar.challenge.book.Order;
 import org.sonar.challenge.book.OrderBook;
-import org.sonar.challenge.book.net.json.DiffOrderDecoder.PayloadOrder;
+import org.sonar.challenge.book.json.DiffOrderDecoder.PayloadOrder;
 
 /**
  * 
@@ -29,7 +29,7 @@ public class TransformerFactory {
 	public Transformer<OrderBookDecoder, OrderBook> getOrderBookDecoderTransformer(final String bookName) {
 		return new Transformer<OrderBookDecoder, OrderBook>() {
 
-			private final Function<org.sonar.challenge.book.net.json.OrderBookDecoder.Order, Order> getTransformer(
+			private final Function<org.sonar.challenge.book.json.OrderBookDecoder.Order, Order> getTransformer(
 					LocalDateTime time) {
 				return o -> new Order(o.getPrice(), o.getAmount(), time);
 			}

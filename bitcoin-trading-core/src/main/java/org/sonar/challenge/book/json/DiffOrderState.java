@@ -1,4 +1,4 @@
-package org.sonar.challenge.book.net.json;
+package org.sonar.challenge.book.json;
 
 public enum DiffOrderState {
 
@@ -8,6 +8,10 @@ public enum DiffOrderState {
 	
 	private DiffOrderState(String state) {
 		this.state = state;
+	}
+	
+	public String getState() {
+		return state;
 	}
 	
 	public static DiffOrderState getBy(String state) {

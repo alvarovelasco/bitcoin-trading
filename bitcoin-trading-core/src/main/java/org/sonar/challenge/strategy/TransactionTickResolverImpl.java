@@ -3,12 +3,12 @@ package org.sonar.challenge.strategy;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.sonar.challenge.book.Transaction;
+import org.sonar.challenge.book.Trade;
 
 public class TransactionTickResolverImpl implements TransactionTickResolver {
 
 	@Override
-	public Optional<Ticks> resolve(Transaction c1, Transaction c2) {
+	public Optional<Ticks> resolve(Trade c1, Trade c2) {
 		Objects.requireNonNull(c1);
 		Objects.requireNonNull(c2);
 		

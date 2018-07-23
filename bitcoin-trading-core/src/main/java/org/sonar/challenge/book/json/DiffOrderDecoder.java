@@ -1,4 +1,6 @@
-package org.sonar.challenge.book.net.json;
+package org.sonar.challenge.book.json;
+
+import static java.util.Objects.requireNonNull;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -32,13 +34,29 @@ public class DiffOrderDecoder {
 		return type;
 	}
 	
+	public void setBook(String book) {
+		this.book = book;
+	}
+	
+	public void setPayload(List<PayloadOrder> payload) {
+		this.payload = payload;
+	}
+	
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+	
+	public void setType(String type) {
+		this.type = type;
+	}
+	
 	@Override
 	public String toString() {
 		return "DiffOrderDecoder [type=" + type + ", book=" + book + ", sequence=" + sequence + ", payload=" + payload
 				+ "]";
 	}
 
-	static class PayloadOrder {
+	public static class PayloadOrder {
 		@SerializedName("d")
 		private long timestamp;
 		
@@ -53,6 +71,15 @@ public class DiffOrderDecoder {
 		
 		@SerializedName("s")
 		private String state;
+		
+		public PayloadOrder(BigDecimal amount, BigDecimal value,DiffOrderMessageType diffOrderMessageType,
+				DiffOrderState state, long timestamp) {
+			this.amount = amount;
+			this.value = value;
+			this.state = requireNonNull(state).getState();
+			this.type = requireNonNull(diffOrderMessageType).getNumber();
+			this.timestamp = timestamp;
+		}
 		
 		public BigDecimal getAmount() {
 			return amount;

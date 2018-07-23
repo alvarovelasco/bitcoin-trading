@@ -1,4 +1,4 @@
-package org.sonar.challenge.book.net;
+package org.sonar.challenge.book.subscription.difford;
 
 import static java.util.Objects.requireNonNull;
 
@@ -8,35 +8,37 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.sonar.challenge.book.OrderBook;
-import org.sonar.challenge.book.net.json.DiffOrderDecoder;
-import org.sonar.challenge.book.net.json.TransformerFactory;
+import org.sonar.challenge.book.json.DiffOrderDecoder;
+import org.sonar.challenge.book.json.TransformerFactory;
+import org.sonar.challenge.exception.OrderBookNotFoundException;
+import org.sonar.challenge.exception.SonarChallengeException;
 
 /**
  * 
  * @author Alvaro
  *
  */
-public final class DiffOrderMergeIntoOrderBookCommandExecutor implements CommandExecutor {
+public class DiffOrderMergeIntoOrderBookCommandExecutor implements CommandExecutor {
 
 	private final CreateDiffOrderForBookUpdateCommandContext context;
 
-	private final List<DiffOrderDecoder> diffOrderList;
+	private final DiffOrderDecoderListProvider decoderListProvider;
 
-	public DiffOrderMergeIntoOrderBookCommandExecutor(CreateDiffOrderForBookUpdateCommandContext context,
-			List<DiffOrderDecoder> diffOrderList) {
+	protected DiffOrderMergeIntoOrderBookCommandExecutor(CreateDiffOrderForBookUpdateCommandContext context,
+			DiffOrderDecoderListProvider decoderListProvider) {
 		this.context = requireNonNull(context);
-		this.diffOrderList = requireNonNull(diffOrderList);
+		this.decoderListProvider = requireNonNull(decoderListProvider);
 	}
 
 	@Override
-	public void execute() {
+	public void execute() throws SonarChallengeException {
 		final OrderBook orderBook = context.getOrderBook();
 
 		if (orderBook == null) {
-			// FIXME AVF Change this exception
-			throw new RuntimeException("Order book not found");
+			throw new OrderBookNotFoundException("No order book found in the context");
 		}
 
+		List<DiffOrderDecoder> diffOrderList = decoderListProvider.provide();
 		if (diffOrderList.isEmpty()) {
 			return;
 		}
@@ -52,6 +54,10 @@ public final class DiffOrderMergeIntoOrderBookCommandExecutor implements Command
 		OrderBook finalOrderBook = merge(orderBook, resolvedDiffOrderBooks);
 
 		context.setOrderBook(finalOrderBook);
+	}
+	
+	public interface DiffOrderDecoderListProvider {
+		List<DiffOrderDecoder> provide();
 	}
 
 	public static OrderBook merge(OrderBook finalOrderBook, List<OrderBook> resolvedDiffOrderBooks) {

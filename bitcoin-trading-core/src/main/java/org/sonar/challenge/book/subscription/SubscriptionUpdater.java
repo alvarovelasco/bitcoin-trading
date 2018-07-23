@@ -1,4 +1,4 @@
-package org.sonar.challenge.book;
+package org.sonar.challenge.book.subscription;
 
 public interface SubscriptionUpdater<P> {
 

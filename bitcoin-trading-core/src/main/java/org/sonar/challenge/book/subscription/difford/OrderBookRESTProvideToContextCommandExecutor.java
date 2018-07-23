@@ -1,10 +1,14 @@
-package org.sonar.challenge.book.net;
+package org.sonar.challenge.book.subscription.difford;
 
 import static java.util.Objects.requireNonNull;
 
 import org.sonar.challenge.book.OrderBook;
-import org.sonar.challenge.book.net.json.OrderBookDecoder;
-import org.sonar.challenge.book.net.json.TransformerFactory.Transformer;
+import org.sonar.challenge.book.json.OrderBookDecoder;
+import org.sonar.challenge.book.json.TransformerFactory;
+import org.sonar.challenge.book.json.TransformerFactory.Transformer;
+import org.sonar.challenge.exception.RESTResponseNotSuccessException;
+import org.sonar.challenge.exception.SonarChallengeException;
+import org.sonar.challenge.rest.BitsoOrderBookRESTRequest;
 import org.sonar.challenge.rest.SimpleRESTRequest;
 import org.sonar.challenge.util.GSonBuilder;
 
@@ -17,7 +21,7 @@ import com.google.gson.Gson;
  * @author Alvaro
  *
  */
-public final class OrderBookRESTProvideToContextCommandExecutor implements CommandExecutor {
+public class OrderBookRESTProvideToContextCommandExecutor implements CommandExecutor {
 
 	private final CreateDiffOrderForBookUpdateCommandContext context;
 	
@@ -25,7 +29,24 @@ public final class OrderBookRESTProvideToContextCommandExecutor implements Comma
 	
 	private final Transformer<OrderBookDecoder, OrderBook> transformer;
 	
+	/**
+	 * 
+	 * @param context
+	 * @param bookName
+	 */
 	public OrderBookRESTProvideToContextCommandExecutor(CreateDiffOrderForBookUpdateCommandContext context,
+			String bookName) {
+		this(context, TransformerFactory.getInstance().getOrderBookDecoderTransformer(bookName),
+				new BitsoOrderBookRESTRequest(bookName));
+	}
+	
+	/**
+	 * Constructor used for test purposes
+	 * @param context
+	 * @param transformer
+	 * @param simpleRESTRequest
+	 */
+	OrderBookRESTProvideToContextCommandExecutor(CreateDiffOrderForBookUpdateCommandContext context,
 			Transformer<OrderBookDecoder, OrderBook> transformer,
 			SimpleRESTRequest simpleRESTRequest) {
 		this.context = requireNonNull(context);
@@ -33,7 +54,7 @@ public final class OrderBookRESTProvideToContextCommandExecutor implements Comma
 		this.transformer = requireNonNull(transformer);
 	}
 	
-	public void execute() {
+	public void execute() throws SonarChallengeException {
 		String content = simpleRESTRequest.request();
 		
 		OrderBookDecoder decoder = GSonBuilder.buildStandardGson().fromJson(content, OrderBookDecoder.class);

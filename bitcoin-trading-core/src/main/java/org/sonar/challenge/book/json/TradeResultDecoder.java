@@ -1,4 +1,4 @@
-package org.sonar.challenge.book.net.json;
+package org.sonar.challenge.book.json;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,9 +12,9 @@ public class TradeResultDecoder {
 
 	private boolean success;
 
-	private List<Transaction> payload;
+	private List<Trade> payload;
 	
-	public List<Transaction> getPayload() {
+	public List<Trade> getPayload() {
 		return new ArrayList<>(payload);
 	}
 
@@ -22,7 +22,7 @@ public class TradeResultDecoder {
 		return success;
 	}
 	
-	public static class Transaction {
+	public static class Trade {
 		private String book;
 
 		@SerializedName("created_at")
@@ -55,7 +55,7 @@ public class TradeResultDecoder {
 		}
 
 		public LocalDateTime getTimestamp() {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+'SS:SS");
+			DateTimeFormatter formatter = DateTimeFormatter.ISO_OFFSET_DATE_TIME;
 			return LocalDateTime.parse(timestamp, formatter);
 		}
 

@@ -14,6 +14,7 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicHeader;
+import org.sonar.challenge.exception.RESTResponseNotSuccessException;
 
 public abstract class BaseBitsoRESTRequest implements SimpleRESTRequest {
 
@@ -23,7 +24,7 @@ public abstract class BaseBitsoRESTRequest implements SimpleRESTRequest {
 	
 	abstract String getEndpoint();
 	
-	public final String request() {
+	public final String request() throws RESTResponseNotSuccessException {
 		final HttpClientBuilder httpClientBuilder = HttpClientBuilder.create();
 		
 		final List<Header> headers = Arrays.<Header> asList(new BasicHeader("accept", "application/json"));
@@ -37,9 +38,7 @@ public abstract class BaseBitsoRESTRequest implements SimpleRESTRequest {
 			HttpResponse response = httpClient.execute(getMethod);
 	
 			if (response.getStatusLine().getStatusCode() != 200) {
-				// FIXME AVF: Change the exception for handling
-				throw new RuntimeException("Failed : HTTP error code : "
-				   + response.getStatusLine().getStatusCode());
+				throw new RESTResponseNotSuccessException(response.getStatusLine());
 			}
 			
 			String content = IOUtils.toString(response.getEntity().getContent(), Charset.forName(CHARSET));

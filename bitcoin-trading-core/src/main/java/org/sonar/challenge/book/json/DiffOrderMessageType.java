@@ -1,4 +1,4 @@
-package org.sonar.challenge.book.net.json;
+package org.sonar.challenge.book.json;
 
 public enum DiffOrderMessageType {
 	BUY(0), SELL(1);

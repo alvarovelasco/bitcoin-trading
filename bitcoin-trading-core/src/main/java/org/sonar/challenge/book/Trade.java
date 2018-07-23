@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-public final class Transaction  {
+public final class Trade  {
 
 	private final LocalDateTime timestamp;
 
@@ -14,7 +14,7 @@ public final class Transaction  {
 
 	private final Optional<Long> tradeId;
 	
-	private Transaction(BigDecimal amount, BigDecimal price, LocalDateTime timestamp,Optional<Long> tradeId) {
+	private Trade(BigDecimal amount, BigDecimal price, LocalDateTime timestamp,Optional<Long> tradeId) {
 		this.timestamp = timestamp;
 		this.amount = amount;
 		this.price = price;
@@ -56,7 +56,7 @@ public final class Transaction  {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Transaction other = (Transaction) obj;
+		Trade other = (Trade) obj;
 		if (amount == null) {
 			if (other.amount != null)
 				return false;
@@ -86,7 +86,7 @@ public final class Transaction  {
 				+ tradeId + "]";
 	}
 
-	public static class TransactionBuilder {
+	public static class TradeBuilder {
 
 		private BigDecimal amount;
 
@@ -96,29 +96,29 @@ public final class Transaction  {
 		
 		private Optional<LocalDateTime> timestamp = Optional.empty();
 		
-		public TransactionBuilder() {
+		public TradeBuilder() {
 		}
 		
-		public TransactionBuilder price(BigDecimal price) {
+		public TradeBuilder price(BigDecimal price) {
 			this.price = price;
 			return this;
 		}
-		public TransactionBuilder amount(BigDecimal amount) {
+		public TradeBuilder amount(BigDecimal amount) {
 			this.amount = amount;
 			return this;
 		}
 		
-		public TransactionBuilder timestamp(LocalDateTime timestamp) {
+		public TradeBuilder timestamp(LocalDateTime timestamp) {
 			this.timestamp = Optional.of(timestamp);
 			return this;
 		}
 		
-		public TransactionBuilder tradeId(long tradeId) {
+		public TradeBuilder tradeId(long tradeId) {
 			this.tradeId = Optional.of(tradeId);
 			return this;
 		}
 		
-		public Transaction build() {
+		public Trade build() {
 			if (amount == null) {
 				throw new IllegalArgumentException("Amount not defined");
 			}
@@ -126,7 +126,7 @@ public final class Transaction  {
 				throw new IllegalArgumentException("Price not defined");
 			}
 
-			return new Transaction(amount, price, timestamp.orElse(LocalDateTime.now()), tradeId);
+			return new Trade(amount, price, timestamp.orElse(LocalDateTime.now()), tradeId);
 		}
 	}
 	
