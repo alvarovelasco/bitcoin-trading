@@ -2,6 +2,7 @@ package org.sonar.challenge.rest;
 
 import static java.util.Objects.requireNonNull;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -54,7 +55,7 @@ public class BitsoTradesRESTRequest extends BaseBitsoRESTRequest {
 
 				TradeResultDecoder tradeResult = GSonBuilder.buildStandardGson().fromJson(response,
 						TradeResultDecoder.class);
-				System.out.println(response);
+				System.out.println(LocalDateTime.now() + " " + response);
 			} catch (RESTResponseNotSuccessException e) {
 				e.printStackTrace();
 			}

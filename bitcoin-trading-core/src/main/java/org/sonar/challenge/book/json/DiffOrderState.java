@@ -2,7 +2,7 @@ package org.sonar.challenge.book.json;
 
 public enum DiffOrderState {
 
-	CANCELLED("cancelled"), OPEN("open");
+	CANCELLED("cancelled"), COMPLETED("completed"), OPEN("open");
 	
 	private final String state;
 	
@@ -20,6 +20,6 @@ public enum DiffOrderState {
 				return doState;
 		}
 		
-		throw new IllegalArgumentException("State does not match mapped states");
+		throw new IllegalArgumentException("State "+state+" does not match mapped states");
 	}
 }

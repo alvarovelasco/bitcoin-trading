@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane fx:controller="org.sonar.challenge.order.OrderController" xmlns:fx="http://javafx.com/fxml/1">
+  <children>
+    <Label fx:id="ordersLbl" AnchorPane.topAnchor="5.0" AnchorPane.leftAnchor="5.0"
+    	style="-fx-font-weight: bold"/>
+    <TableView fx:id="ordersTbl" AnchorPane.topAnchor="25.0" AnchorPane.leftAnchor="5.0"
+    	AnchorPane.rightAnchor="5.0" AnchorPane.bottomAnchor="5.0">
+      <columns>
+        <TableColumn prefWidth="75.0" text="Price" fx:id="itemPriceCol" />
+        <TableColumn prefWidth="243.0" text="Amount" fx:id="itemAmountCol" />
+        <TableColumn prefWidth="75.0" text="Time" fx:id="itemTimeCol" />
+      </columns>
+    </TableView>
+  </children>
+</AnchorPane>
+

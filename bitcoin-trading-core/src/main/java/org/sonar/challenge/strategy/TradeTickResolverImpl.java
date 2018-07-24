@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.sonar.challenge.book.Trade;
 
-public class TransactionTickResolverImpl implements TransactionTickResolver {
+public class TradeTickResolverImpl implements TradeTickResolver {
 
 	@Override
 	public Optional<Ticks> resolve(Trade c1, Trade c2) {

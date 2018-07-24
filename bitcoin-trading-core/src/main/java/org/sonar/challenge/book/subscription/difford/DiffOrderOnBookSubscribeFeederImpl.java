@@ -89,7 +89,8 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 	}
 
 	private void defaultInitDependencies() {
-		initDependencies(new CreateDiffOrderForBookUpdateCommandContext(),
+		context = new CreateDiffOrderForBookUpdateCommandContext();
+		initDependencies(context,
 				new SubscribeDiffOrderCommandExecutor.Builder().book(orderBookName).context(context)
 						.handler(queueMessageHandler).build(),
 				new OrderBookRESTProvideToContextCommandExecutor(context, orderBookName),
@@ -122,7 +123,6 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 				diffOrderMergeIntoOrderBookCommandExecutor.execute();
 				context.getBitsoSubscriber().setHandler(normalDigestHandler);
 			}
-
 			if (context.getOrderBook() != null) {
 				UpdatedOrderBook firstOrderBook = new UpdatedOrderBook(context.getOrderBook(), new ArrayList<>(),
 						new ArrayList<>());

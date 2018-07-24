@@ -4,6 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Comparator;
 
 /**
  * Contains the representation of a specific order (this may be a bid or ask)
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
  * @author Alvaro
  *
  */
-public final class Order {
+public final class Order  {
 
 	private final BigDecimal price;
 	
@@ -79,7 +80,6 @@ public final class Order {
 		return "Order [price=" + price + ", amount=" + amount + ", at=" + at + "]";
 	}
 
-	
 	
 	
 }

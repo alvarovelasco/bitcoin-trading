@@ -84,7 +84,7 @@ public class DiffOrderMergeIntoOrderBookCommandExecutorTest {
 		DiffOrderDecoderListProvider listProvider = () -> {
 
 			return Arrays.asList(getDiffOrderDecoder(initialOrderBook.getLastSequenceEntered() + 1, 
-					Optional.of(DiffOrderMessageType.BUY), DiffOrderState.OPEN));
+					Optional.of(DiffOrderMessageType.BUY), DiffOrderState.COMPLETED));
 		};
 
 		new DiffOrderMergeIntoOrderBookCommandExecutor(context, listProvider).execute();
