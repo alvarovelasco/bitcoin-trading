@@ -9,6 +9,9 @@ import org.sonar.challenge.rest.BitsoTradesRESTRequest;
 
 public class TradingEngineSchedulerImpl implements TradingEngineScheduler {
 
+	TradingEngineSchedulerImpl() {
+	}
+	
 	@Override
 	public ScheduledExecutorService schedule(TradingEngine tradingEngine, Duration duration) {
 		ScheduledExecutorService scheduledExecutorService = 

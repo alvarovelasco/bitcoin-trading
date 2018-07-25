@@ -45,6 +45,34 @@ public class BitsoTradesRESTRequest extends BaseBitsoRESTRequest {
 	String getEndpoint() {
 		return ENDPOINT;
 	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((book == null) ? 0 : book.hashCode());
+		result = prime * result + limit;
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BitsoTradesRESTRequest other = (BitsoTradesRESTRequest) obj;
+		if (book == null) {
+			if (other.book != null)
+				return false;
+		} else if (!book.equals(other.book))
+			return false;
+		if (limit != other.limit)
+			return false;
+		return true;
+	}
 
 	public static void main(String[] args) {
 
