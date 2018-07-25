@@ -23,6 +23,11 @@ import org.sonar.challenge.websocket.BitsoSubscriber;
 import org.sonar.challenge.websocket.BitsoSubscriber.Handler;
 import org.sonar.challenge.websocket.SubscriptionTypes;
 
+/**
+ * 
+ * @author Alvaro Velasco
+ *
+ */
 public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<UpdatedOrderBook> {
 
 	private static final Logger logger = LoggerFactory.getLogger(DiffOrderOnBookSubscribeFeederImpl.class);
@@ -43,6 +48,7 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 
 	private DiffOrderMergeIntoOrderBookCommandExecutor diffOrderMergeIntoOrderBookCommandExecutor;
 
+	// These two handlers are not covered by tests. Probably they should be abstracted into own classes.
 	private final Handler<DiffOrderDecoder> queueMessageHandler = d -> {
 		if (!Objects.isNull(d.getBook()) && Objects.equals(SubscriptionTypes.DIFF_ORDERS.getKeyword(), d.getType())) {
 			messageQueue.add(d);
@@ -108,6 +114,9 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 		subscriptors.add(s);
 	}
 
+	/**
+	 * Start the feeding process.
+	 */
 	@Override
 	public void startFeeding() {
 		try {
@@ -130,6 +139,9 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 		}
 	}
 
+	/**
+	 * Stops the feeding process. Shutdown of any connection to the bitso endpoint
+	 */
 	@Override
 	public void stopFeeding() {
 		try {
@@ -142,6 +154,11 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 		}
 	}
 
+	/**
+	 * Dequeue the internal list of messages received by the bitso subscriber. 
+	 * This will leave the list clean and empty.
+	 * @return
+	 */
 	protected List<DiffOrderDecoder> dequeue() {
 		List<DiffOrderDecoder> diffOrderDecoders = new ArrayList<>(messageQueue);
 		messageQueue.clear();

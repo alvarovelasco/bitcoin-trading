@@ -10,6 +10,15 @@ import org.sonar.challenge.book.json.TradeResultDecoder;
 import org.sonar.challenge.rest.BitsoTradesRESTRequest;
 import org.sonar.challenge.util.GSonBuilder;
 
+/**
+ * Implementation of TradingEngine for implementing the default behaviour of the engine expected to fetch 
+ * trades, possibly apply strategies based on these trades, issuing the orders resulting from 
+ * applying the strategies, and notifying the listeners with the resulting trades.
+ * 
+ * 
+ * @author Alvaro Velasco
+ *
+ */
 public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 
 	private final List<Trade> tradeList = new ArrayList<>();

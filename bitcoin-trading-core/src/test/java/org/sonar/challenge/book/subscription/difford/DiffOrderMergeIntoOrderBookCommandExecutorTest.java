@@ -45,10 +45,12 @@ public class DiffOrderMergeIntoOrderBookCommandExecutorTest {
 
 		DiffOrderDecoderListProvider listProvider = mock(DiffOrderDecoderListProvider.class);
 		new DiffOrderMergeIntoOrderBookCommandExecutor(context, listProvider).execute();
-
-		verify(context, VerificationModeFactory.noMoreInteractions()).setOrderBook(any(OrderBook.class));
-		verify(context, VerificationModeFactory.times(1)).getOrderBook();
-		verify(listProvider, VerificationModeFactory.noMoreInteractions()).provide();
+	}
+	
+	@Test
+	public void testMerge_whenNoDecoderProvidedByTheList() throws SonarChallengeException {
+		new DiffOrderMergeIntoOrderBookCommandExecutor(context, () -> Arrays.asList()).execute();
+		verify(context, VerificationModeFactory.times(0)).setOrderBook(any(OrderBook.class));
 	}
 
 	@Test(expected = NullPointerException.class)

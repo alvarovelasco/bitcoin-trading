@@ -5,6 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
+/**
+ *	Manager of the different trading engines to be run and their executorServices, 
+ *  so that we make sure only one trading engine of the same kind is currently running on the background.
+ * 
+ * @author Alvaro
+ */
 public class TradingEngineManager {
 
 	// Executor instance
