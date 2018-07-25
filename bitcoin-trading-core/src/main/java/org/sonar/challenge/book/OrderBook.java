@@ -3,8 +3,9 @@ package org.sonar.challenge.book;
 import static java.util.Objects.requireNonNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+
+import org.sonar.challenge.order.Order;
 
 /**
  * Contains the representation of an order book

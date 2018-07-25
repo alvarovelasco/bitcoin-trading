@@ -6,9 +6,10 @@ import java.time.ZoneId;
 import java.util.Objects;
 import java.util.function.Function;
 
-import org.sonar.challenge.book.Order;
 import org.sonar.challenge.book.OrderBook;
 import org.sonar.challenge.book.net.json.DiffOrderDecoder.PayloadOrder;
+import org.sonar.challenge.order.Order;
+import org.sonar.challenge.order.OrderType;
 
 /**
  * 
@@ -29,9 +30,9 @@ public class TransformerFactory {
 	public Transformer<OrderBookDecoder, OrderBook> getOrderBookDecoderTransformer(final String bookName) {
 		return new Transformer<OrderBookDecoder, OrderBook>() {
 
-			private final Function<org.sonar.challenge.book.net.json.OrderBookDecoder.Order, Order> getTransformer(
+			private final Function<org.sonar.challenge.book.net.json.OrderBookDecoder.Order, Order> getTransformer(OrderType type,
 					LocalDateTime time) {
-				return o -> new Order(o.getPrice(), o.getAmount(), time);
+				return o -> new Order(o.getPrice(), o.getAmount(), type, time);
 			}
 
 			public OrderBook transform(OrderBookDecoder origin) {
@@ -39,9 +40,9 @@ public class TransformerFactory {
 
 				OrderBook orderBook = new OrderBook(bookName, sequence);
 
-				origin.getAsks().stream().filter(Objects::nonNull).map(getTransformer(origin.getUpdateTime()))
+				origin.getAsks().stream().filter(Objects::nonNull).map(getTransformer(OrderType.SELL, origin.getUpdateTime()))
 						.forEach(o -> orderBook.addAsk(o));
-				origin.getBids().stream().filter(Objects::nonNull).map(getTransformer(origin.getUpdateTime()))
+				origin.getBids().stream().filter(Objects::nonNull).map(getTransformer(OrderType.BUY, origin.getUpdateTime()))
 						.forEach(o -> orderBook.addBid(o));
 
 				return orderBook;
@@ -54,6 +55,7 @@ public class TransformerFactory {
 
 			private final Function<PayloadOrder, Order> transformerFunction = po -> new Order(po.getValue(),
 					po.getAmount(),
+					tranformToOrderType.transform(po.getType()),
 					Instant.ofEpochMilli(po.getTimestamp()).atZone(ZoneId.systemDefault()).toLocalDateTime());
 
 			@Override
@@ -73,6 +75,13 @@ public class TransformerFactory {
 			}
 		};
 	}
+	
+	private Transformer<Integer, OrderType> tranformToOrderType = s -> {
+		if (s != 1 || s != 0) 
+			throw new IllegalArgumentException("Unexpected type");
+		return s == 0 ? OrderType.BUY : 
+					 OrderType.SELL; 
+	};
 
 	public static interface Transformer<O, R> {
 		R transform(O origin);

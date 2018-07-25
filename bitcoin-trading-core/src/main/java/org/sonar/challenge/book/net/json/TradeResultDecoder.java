@@ -55,7 +55,7 @@ public class TradeResultDecoder {
 		}
 
 		public LocalDateTime getTimestamp() {
-			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+'SS:SS");
+			DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'+'SSSS");
 			return LocalDateTime.parse(timestamp, formatter);
 		}
 

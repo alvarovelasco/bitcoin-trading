@@ -4,6 +4,8 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.List;
 
+import org.sonar.challenge.order.Order;
+
 /**
  * 
  * @author avf

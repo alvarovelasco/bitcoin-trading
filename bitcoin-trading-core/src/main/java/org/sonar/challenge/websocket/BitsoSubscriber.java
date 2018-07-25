@@ -20,8 +20,6 @@ import org.glassfish.tyrus.client.ClientManager;
 import org.sonar.challenge.book.net.json.DiffOrderDecoder;
 import org.sonar.challenge.util.GSonBuilder;
 
-import com.google.gson.Gson;
-
 /**
  * 
  * @author Alvaro

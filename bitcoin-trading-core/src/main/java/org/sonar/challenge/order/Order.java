@@ -1,4 +1,4 @@
-package org.sonar.challenge.book;
+package org.sonar.challenge.order;
 
 import static java.util.Objects.requireNonNull;
 
@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 /**
- * Contains the representation of a specific order (this may be a bid or ask)
+ * Contains the representation of a specific order (this may be a sell or buy)
  * 
  * @author Alvaro
  *
@@ -19,9 +19,12 @@ public final class Order {
 	
 	private final LocalDateTime at;
 	
-	public Order(BigDecimal price, BigDecimal amount, LocalDateTime at) {
+	private final OrderType type;
+	
+	public Order(BigDecimal price, BigDecimal amount, OrderType type , LocalDateTime at) {
 		this.price = requireNonNull(price);
 		this.amount = requireNonNull(amount);
+		this.type = requireNonNull(type);
 		this.at = at;
 	}
 	
@@ -33,6 +36,10 @@ public final class Order {
 		return price;
 	}
 	
+	public OrderType getType() {
+		return type;
+	}
+	
 	public LocalDateTime getTimestamp() {
 		return at;
 	}
@@ -42,8 +49,9 @@ public final class Order {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((amount == null) ? 0 : amount.hashCode());
-		result = prime * result + ((price == null) ? 0 : price.hashCode());
 		result = prime * result + ((at == null) ? 0 : at.hashCode());
+		result = prime * result + ((price == null) ? 0 : price.hashCode());
+		result = prime * result + ((type == null) ? 0 : type.hashCode());
 		return result;
 	}
 
@@ -61,15 +69,17 @@ public final class Order {
 				return false;
 		} else if (!amount.equals(other.amount))
 			return false;
+		if (at == null) {
+			if (other.at != null)
+				return false;
+		} else if (!at.equals(other.at))
+			return false;
 		if (price == null) {
 			if (other.price != null)
 				return false;
 		} else if (!price.equals(other.price))
 			return false;
-		if (at == null)
-			if (other.at != null)
-			return false;
-		else if (!at.equals(other.at))
+		if (type != other.type)
 			return false;
 		return true;
 	}
@@ -79,7 +89,4 @@ public final class Order {
 		return "Order [price=" + price + ", amount=" + amount + ", at=" + at + "]";
 	}
 
-	
-	
-	
 }
