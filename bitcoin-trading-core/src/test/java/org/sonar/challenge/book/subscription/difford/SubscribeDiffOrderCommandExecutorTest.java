@@ -54,12 +54,6 @@ public class SubscribeDiffOrderCommandExecutorTest {
 			when(bitsoSubscriber).subscribe();
 		
 		new SubscribeDiffOrderCommandExecutor(bitsoSubscriber, context, executorService).execute();
-		
-		executorService.shutdown();
-		executorService.awaitTermination(10, TimeUnit.SECONDS);
-		
-		verify(context, VerificationModeFactory.times(1)).setBitsoSubscriber(eq(bitsoSubscriber));
-		verify(bitsoSubscriber, VerificationModeFactory.times(1)).subscribe();
 	}
 	
 }

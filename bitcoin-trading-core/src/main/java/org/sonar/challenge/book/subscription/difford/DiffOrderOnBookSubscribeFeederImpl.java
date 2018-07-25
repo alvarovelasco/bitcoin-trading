@@ -2,27 +2,23 @@ package org.sonar.challenge.book.subscription.difford;
 
 import static java.util.Objects.requireNonNull;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.challenge.book.OrderBook;
-import org.sonar.challenge.book.subscription.SubscribeFeeder;
 import org.sonar.challenge.book.UpdatedOrderBook;
 import org.sonar.challenge.book.json.DiffOrderDecoder;
 import org.sonar.challenge.book.json.TransformerFactory;
+import org.sonar.challenge.book.subscription.SubscribeFeeder;
 import org.sonar.challenge.book.subscription.SubscriptionUpdater;
 import org.sonar.challenge.exception.BitsoSubscribeException;
 import org.sonar.challenge.exception.SonarChallengeException;
-import org.sonar.challenge.rest.BitsoOrderBookRESTRequest;
 import org.sonar.challenge.websocket.BitsoSubscriber;
 import org.sonar.challenge.websocket.BitsoSubscriber.Handler;
 import org.sonar.challenge.websocket.SubscriptionTypes;

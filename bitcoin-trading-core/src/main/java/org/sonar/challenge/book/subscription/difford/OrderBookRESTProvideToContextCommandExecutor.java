@@ -6,13 +6,10 @@ import org.sonar.challenge.book.OrderBook;
 import org.sonar.challenge.book.json.OrderBookDecoder;
 import org.sonar.challenge.book.json.TransformerFactory;
 import org.sonar.challenge.book.json.TransformerFactory.Transformer;
-import org.sonar.challenge.exception.RESTResponseNotSuccessException;
 import org.sonar.challenge.exception.SonarChallengeException;
 import org.sonar.challenge.rest.BitsoOrderBookRESTRequest;
 import org.sonar.challenge.rest.SimpleRESTRequest;
 import org.sonar.challenge.util.GSonBuilder;
-
-import com.google.gson.Gson;
 
 /**
  * Executes the simple rest request and transform the result into an {@link OrderBook} 

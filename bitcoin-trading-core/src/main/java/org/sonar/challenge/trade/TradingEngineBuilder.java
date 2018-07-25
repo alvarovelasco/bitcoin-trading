@@ -2,8 +2,8 @@ package org.sonar.challenge.trade;
 
 import java.util.Optional;
 
-public interface TradingEngineBuilder {
+public interface TradingEngineBuilder<T extends TradingEngine<?>> {
 
-	TradingEngine  build(Optional<TradingEngine> baseEngine);	
+	T build();	
 	
 }

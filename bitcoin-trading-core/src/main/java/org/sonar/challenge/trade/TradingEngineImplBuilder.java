@@ -6,28 +6,35 @@ import java.util.Optional;
 
 import org.sonar.challenge.rest.BitsoTradesRESTRequest;
 
-public class TradingEngineBuilderImpl implements TradingEngineBuilder {
+public class TradingEngineImplBuilder implements TradingEngineBuilder<TradingEngineImpl> {
 
-	private int limit;
+	private int limit = 10;
 
-	private String bookName;
+	private String bookName = null;
+	
+	private Optional<TradingEngineImpl> baseEngine = Optional.empty();
 
-	public TradingEngineBuilderImpl() {
+	public TradingEngineImplBuilder() {
 	}
 
-	public TradingEngineBuilderImpl limit(int limit) {
+	public TradingEngineImplBuilder limit(int limit) {
 		this.limit = limit;
 		return this;
 	}
 
-	public TradingEngineBuilderImpl bookName(String bookName) {
+	public TradingEngineImplBuilder bookName(String bookName) {
 		this.bookName = bookName;
+		return this;
+	}
+	
+	public TradingEngineImplBuilder inherateStateFrom(TradingEngineImpl tradingEngineImpl) {
+		this.baseEngine = Optional.ofNullable(tradingEngineImpl);
 		return this;
 	}
 
 	@Override
-	public TradingEngine build(Optional<TradingEngine> baseEngine) {
-		TradingEngine newTradingEngine = new TradingEngine(
+	public TradingEngineImpl build() {
+		TradingEngineImpl newTradingEngine = new TradingEngineImpl(
 				new BitsoTradesRESTRequest(Objects.requireNonNull(bookName), limit), limit);
 		
 		if (baseEngine.isPresent()) {
