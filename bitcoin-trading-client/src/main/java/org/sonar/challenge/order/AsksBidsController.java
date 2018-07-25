@@ -18,6 +18,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.SplitPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 public class AsksBidsController implements Initializable {
 
@@ -57,10 +58,13 @@ public class AsksBidsController implements Initializable {
 		AnchorPane asks = fxmlLoader.load();
 		this.asksController = fxmlLoader.getController();
 		this.asksController.setLabels(resources.getString("orderTbl.nameLbl.asks"));
-
+		
 		hboxAsksBids.getChildren().add(bids);
 		hboxAsksBids.getChildren().add(new SplitPane());
 		hboxAsksBids.getChildren().add(asks);
+
+		HBox.setHgrow(bids, Priority.ALWAYS);
+		HBox.setHgrow(asks, Priority.ALWAYS);
 
 		PropertiesConfig.getInstance().addLimitOrderObserver(bidsController);
 		PropertiesConfig.getInstance().addLimitOrderObserver(asksController);

@@ -32,7 +32,6 @@ public class Main extends Application {
 			FXMLLoader loader = new FXMLLoader(Main.class.getResource("../order/AsksBids.fxml"));
 			loader.setResources(ResourceBundle.getBundle("org.sonar.challenge.order.bundle"));
 			rootLayout = loader.load();
-			
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(rootLayout);
 			scene.getStylesheets().add("style1.css");

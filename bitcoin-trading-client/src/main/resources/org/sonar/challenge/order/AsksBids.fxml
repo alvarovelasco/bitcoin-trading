@@ -5,7 +5,7 @@
 
 <HBox fx:controller="org.sonar.challenge.order.AsksBidsController"
 	  fx:id="hboxAsksBids"
-		 xmlns:fx="http://javafx.com/fxml/1">
+		 xmlns:fx="http://javafx.com/fxml/1" >
 	<children>
 	</children>
 </HBox >

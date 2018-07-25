@@ -82,7 +82,7 @@ public final class Trade  {
 
 	@Override
 	public String toString() {
-		return "Transaction [timestamp=" + timestamp + ", amount=" + amount + ", price=" + price + ", tradeId="
+		return "Trade [timestamp=" + timestamp + ", amount=" + amount + ", price=" + price + ", tradeId="
 				+ tradeId + "]";
 	}
 

@@ -5,7 +5,8 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane fx:controller="org.sonar.challenge.order.OrderController" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane fx:controller="org.sonar.challenge.order.OrderController" xmlns:fx="http://javafx.com/fxml/1"
+		>
   <children>
     <Label fx:id="ordersLbl" AnchorPane.topAnchor="5.0" AnchorPane.leftAnchor="5.0"
     	style="-fx-font-weight: bold"/>

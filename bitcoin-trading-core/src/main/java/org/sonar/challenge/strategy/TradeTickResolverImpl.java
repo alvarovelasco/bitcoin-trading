@@ -14,8 +14,8 @@ public class TradeTickResolverImpl implements TradeTickResolver {
 		
 		int signum = c1.getPrice().compareTo(c2.getPrice());
 		
-		if (signum > 0) return Optional.of(Ticks.UPTICK);
-		else if (signum < 0) return Optional.of(Ticks.DOWNTICK);
+		if (signum > 0) return Optional.of(Ticks.DOWNTICK);
+		else if (signum < 0) return Optional.of(Ticks.UPTICK);
 		
 		return Optional.empty();
 	}
