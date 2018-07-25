@@ -17,7 +17,8 @@ import javax.websocket.Session;
 import javax.websocket.WebSocketContainer;
 
 import org.glassfish.tyrus.client.ClientManager;
-import org.sonar.challenge.book.net.json.DiffOrderDecoder;
+import org.sonar.challenge.book.json.DiffOrderDecoder;
+import org.sonar.challenge.exception.BitsoSubscribeException;
 import org.sonar.challenge.util.GSonBuilder;
 
 /**
@@ -40,22 +41,20 @@ public class BitsoSubscriber<D> {
 
 	private final static String ENDPOINT = "wss://ws.bitso.com";
 
-
 	public BitsoSubscriber(String book, SubscriptionTypes type, MessageCoder<D> coder) {
 		this.book = requireNonNull(book);
 		this.type = requireNonNull(type);
 		this.coder = requireNonNull(coder);
 	}
 
-	public void subscribe() {
+	public void subscribe() throws BitsoSubscribeException {
 		try {
 			WebSocketContainer container = ContainerProvider.getWebSocketContainer();
 			ClientManager clientManager = (ClientManager) container;
 			session = clientManager.asyncConnectToServer(this, URI.create(ENDPOINT)).get();
 		} catch (DeploymentException | InterruptedException | ExecutionException e) {
-			// FIXME throw restart exception
 			e.printStackTrace();
-		} finally {
+			throw new BitsoSubscribeException(e); 
 		}
 	}
 
@@ -72,8 +71,13 @@ public class BitsoSubscriber<D> {
 	}
 
 	@OnClose
-	public void close() throws IOException {
-		session.close();
+	public void close() throws BitsoSubscribeException {
+		try {
+			session.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new BitsoSubscribeException(e);
+		}
 	}
 
 	@OnMessage
@@ -85,13 +89,12 @@ public class BitsoSubscriber<D> {
 		void handle(D d);
 	}
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws BitsoSubscribeException {
 		BitsoSubscriber<DiffOrderDecoder> subscriber = new BitsoSubscriber<>("btc_mxn", 
 				SubscriptionTypes.DIFF_ORDERS, 
 				m -> GSonBuilder.buildStandardGson().fromJson(m, DiffOrderDecoder.class));
 		subscriber.setHandler(m -> System.out.println(m));
 		subscriber.subscribe();
-
 	}
 
 	@SuppressWarnings("unused")

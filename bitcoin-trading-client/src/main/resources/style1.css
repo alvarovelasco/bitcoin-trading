@@ -1,0 +1,11 @@
+
+.label {
+	-fx-background-color: #333333;
+	-fx-text-fill: white;
+	-fx-alignment: CENTER;
+}
+
+.table-view .column-header-background .label{
+    -fx-background-color: transparent;
+    -fx-text-fill: GRAY;
+}

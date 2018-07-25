@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox fx:controller="org.sonar.challenge.order.AsksBidsController"
+	  fx:id="hboxAsksBids"
+		 xmlns:fx="http://javafx.com/fxml/1" >
+	<children>
+	</children>
+</HBox >
+
