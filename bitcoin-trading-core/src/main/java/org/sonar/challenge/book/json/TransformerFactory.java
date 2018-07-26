@@ -62,11 +62,11 @@ public class TransformerFactory {
 
 				origin.getPayload().stream().filter(Objects::nonNull)
 						.filter(po -> DiffOrderMessageType.BUY.getNumber() == po.getType())
-						.filter(po -> !Objects.equals(DiffOrderState.CANCELLED, po.getState())).map(transformerFunction)
+						.filter(po -> Objects.equals(DiffOrderState.OPEN, po.getState())).map(transformerFunction)
 						.forEach(o -> orderBook.addAsk(o));
 				origin.getPayload().stream().filter(Objects::nonNull)
 						.filter(po -> DiffOrderMessageType.SELL.getNumber() == po.getType())
-						.filter(po -> !Objects.equals(DiffOrderState.CANCELLED, po.getState())).map(transformerFunction)
+						.filter(po -> Objects.equals(DiffOrderState.OPEN, po.getState())).map(transformerFunction)
 						.forEach(o -> orderBook.addBid(o));
 
 				return orderBook;
