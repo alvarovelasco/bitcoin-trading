@@ -5,7 +5,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.sonar.challenge.book.Order;
+import org.sonar.challenge.order.Order;
 import org.sonar.challenge.book.UpdatedOrderBook;
 import org.sonar.challenge.book.subscription.SubscribeFeeder;
 import org.sonar.challenge.book.subscription.difford.DiffOrderOnBookSubscribeFeederImpl;

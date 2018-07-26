@@ -77,8 +77,8 @@ public class TransformerFactory {
 	}
 	
 	private Transformer<Integer, OrderType> tranformToOrderType = s -> {
-		if (s != 1 || s != 0) 
-			throw new IllegalArgumentException("Unexpected type");
+		if (s != 1 && s != 0) 
+			throw new IllegalArgumentException("Unexpected type " + s);
 		return s == 0 ? OrderType.BUY : 
 					 OrderType.SELL; 
 	};

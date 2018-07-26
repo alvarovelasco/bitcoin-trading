@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
-import org.sonar.challenge.book.Order;
+import org.sonar.challenge.order.Order;
 import org.sonar.challenge.main.PropertiesConfig;
 
 import javafx.collections.FXCollections;
