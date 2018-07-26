@@ -9,3 +9,27 @@
     -fx-background-color: transparent;
     -fx-text-fill: GRAY;
 }
+
+.menu-bar{
+  -fx-background-color: peru;
+  -fx-border-color:  #f0cd90;
+  -fx-border-width: 1
+
+}
+
+.menu-bar .label {
+	-fx-background-color: transparent;
+    -fx-font-size: 12 pt;
+    -fx-font-family: "Segoe UI Light";
+    -fx-text-fill: #dedede;
+}
+
+
+.menu .label {
+    -fx-font-size: 10 pt;
+    -fx-text-fill: black;
+}
+
+.menu:hover {
+    -fx-background-color: #bc784e;
+}

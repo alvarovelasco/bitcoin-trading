@@ -100,5 +100,13 @@ public class DiffOrderDecoder {
 		public DiffOrderState getState() {
 			return DiffOrderState.getBy(state);
 		}
+
+		@Override
+		public String toString() {
+			return "PayloadOrder [timestamp=" + timestamp + ", type=" + type + ", amount=" + amount + ", value=" + value
+					+ ", state=" + state + "]";
+		}
+		
+		
 	}
 }

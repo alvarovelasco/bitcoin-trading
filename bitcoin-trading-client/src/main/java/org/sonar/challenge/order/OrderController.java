@@ -1,8 +1,8 @@
 package org.sonar.challenge.order;
 
 
-import static org.sonar.challenge.main.PropertiesConfig.DECIMAL_FORMAT;
-import static org.sonar.challenge.main.PropertiesConfig.FORMATTER;
+import static org.sonar.challenge.main.GlobalPropertiesConfig.DECIMAL_FORMAT;
+import static org.sonar.challenge.main.GlobalPropertiesConfig.FORMATTER;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -10,12 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
-
-import org.sonar.challenge.order.Order;
-import org.sonar.challenge.main.PropertiesConfig;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -88,6 +84,7 @@ public class OrderController implements Initializable, LimitOrderObserver {
 	public void update(int limit) {
 		this.limitOrdersToDisplay = limit;
 	}
+	
 	void setLabels(String name) {
 		ordersLbl.setText(name);
 	}

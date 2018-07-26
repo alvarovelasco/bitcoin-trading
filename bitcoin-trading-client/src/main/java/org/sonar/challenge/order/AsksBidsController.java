@@ -9,7 +9,7 @@ import org.sonar.challenge.order.Order;
 import org.sonar.challenge.book.UpdatedOrderBook;
 import org.sonar.challenge.book.subscription.SubscribeFeeder;
 import org.sonar.challenge.book.subscription.difford.DiffOrderOnBookSubscribeFeederImpl;
-import org.sonar.challenge.main.PropertiesConfig;
+import org.sonar.challenge.main.GlobalPropertiesConfig;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,7 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 
-public class AsksBidsController implements Initializable {
+public class AsksBidsController implements Initializable, LimitOrderObserver {
 
 	private OrderController bidsController;
 
@@ -43,7 +43,7 @@ public class AsksBidsController implements Initializable {
 
 	private void initSubscriptionEngine() {
 		SubscribeFeeder<UpdatedOrderBook> subscribeFeeder = new DiffOrderOnBookSubscribeFeederImpl(
-				PropertiesConfig.getInstance().getBookName());
+				GlobalPropertiesConfig.getInstance().getBookName());
 		subscribeFeeder.subscribe(u -> refresh(u));
 		Platform.runLater(() -> subscribeFeeder.startFeeding());
 	}
@@ -65,9 +65,10 @@ public class AsksBidsController implements Initializable {
 
 		HBox.setHgrow(bids, Priority.ALWAYS);
 		HBox.setHgrow(asks, Priority.ALWAYS);
-
-		PropertiesConfig.getInstance().addLimitOrderObserver(bidsController);
-		PropertiesConfig.getInstance().addLimitOrderObserver(asksController);
+		
+		GlobalPropertiesConfig.getInstance().addLimitOrderObserver(this);
+		GlobalPropertiesConfig.getInstance().addLimitOrderObserver(bidsController);
+		GlobalPropertiesConfig.getInstance().addLimitOrderObserver(asksController);
 	}
 
 	private void refresh(UpdatedOrderBook updatedOrderBook) {
@@ -82,5 +83,10 @@ public class AsksBidsController implements Initializable {
 		});
 
 		flagInitializedData = true;
+	}
+	
+	@Override
+	public void update(int limit) {
+		flagInitializedData = false;
 	}
 }
