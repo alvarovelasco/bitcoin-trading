@@ -13,6 +13,9 @@ import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
+import org.sonar.challenge.main.GlobalPropertiesConfig;
+import org.sonar.challenge.main.LimitObserver;
+
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -24,7 +27,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-public class OrderController implements Initializable, LimitOrderObserver {
+public class OrderController implements Initializable, LimitObserver {
 
 	@FXML
 	private TableView<Order> ordersTbl;
@@ -78,6 +81,8 @@ public class OrderController implements Initializable, LimitOrderObserver {
 		ordersTbl.setItems(data);
 		
 		setLabels(name);
+		
+		GlobalPropertiesConfig.getInstance().addLimitOrderObserver(this);
 	}
 
 	@Override

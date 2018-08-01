@@ -4,10 +4,12 @@ import java.time.Duration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 
 import org.sonar.challenge.rest.BitsoTradesRESTRequest;
 
+// TODO AVF: Unit test
 public class TradingEngineSchedulingExecutorImpl implements TradingEngineExecutor<ScheduledExecutorService> {
 
 	private final Duration duration;
@@ -18,7 +20,7 @@ public class TradingEngineSchedulingExecutorImpl implements TradingEngineExecuto
 
 	@Override
 	public ScheduledExecutorService execute(TradingEngine<?> tradingEngine) {
-		ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(10);
+		ScheduledExecutorService scheduledExecutorService = Executors.newScheduledThreadPool(4);
 		scheduledExecutorService.scheduleAtFixedRate(tradingEngine, 0, duration.getSeconds(), TimeUnit.SECONDS);
 		return scheduledExecutorService;
 	}

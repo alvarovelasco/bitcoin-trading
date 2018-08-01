@@ -12,6 +12,8 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -19,10 +21,7 @@ public class Main extends Application {
 
 	private Stage primaryStage;
 
-	private Parent rootLayout;
-
-	private final static ResourceBundle MAIN_RESOURCES_BUNDLE = ResourceBundle
-			.getBundle("org.sonar.challenge.order.bundle");
+	private final static ResourceBundle MAIN_RESOURCES_BUNDLE = ResourceBundle.getBundle("org.sonar.challenge.bundle");
 
 	@Override
 	public void start(Stage primaryStage) {
@@ -39,13 +38,13 @@ public class Main extends Application {
 	public void initRootLayout() {
 		try {
 			BorderPane root = new BorderPane();
-			// Load root layout from fxml file.
-			FXMLLoader loader = new FXMLLoader(Main.class.getResource("../order/AsksBids.fxml"));
-			loader.setResources(MAIN_RESOURCES_BUNDLE);
-			rootLayout = loader.load();
-			
+
+			TabPane tabFolder = new TabPane();
+			addTab(tabFolder, "Orders", "../order/AsksBids.fxml");
+			addTab(tabFolder, "Trades", "../trades/Trades.fxml");
+
 			root.setTop(getMenuBar());
-			root.setCenter(rootLayout);
+			root.setCenter(tabFolder);
 
 			// Show the scene containing the root layout.
 			Scene scene = new Scene(root);
@@ -53,8 +52,20 @@ public class Main extends Application {
 			primaryStage.setScene(scene);
 			primaryStage.show();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	private void addTab(TabPane tabFolder, String title, String name) throws IOException {
+		// Load root layout from fxml file.
+		FXMLLoader loader = new FXMLLoader(Main.class.getResource(name));
+		loader.setResources(MAIN_RESOURCES_BUNDLE);
+		Parent parentPane = loader.load();
+		Tab tab = new Tab(title);
+		tab.setClosable(false);
+		tab.setContent(parentPane);
+		tabFolder.getTabs().add(tab);
 	}
 
 	private MenuBar getMenuBar() {
@@ -78,7 +89,7 @@ public class Main extends Application {
 
 	private void openProperties() throws IOException {
 		Dialog<PropertiesModel> dialog = PropertiesDialogController.getNewDialog(MAIN_RESOURCES_BUNDLE);
-		
+
 		Optional<PropertiesModel> result = dialog.showAndWait();
 		if (result.isPresent()) {
 			GlobalPropertiesConfig.getInstance().update(result.get());

@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import org.sonar.challenge.order.LimitOrderObserver;
+import org.sonar.challenge.trade.TradingEngineManager;
 
 public class GlobalPropertiesConfig {
 
@@ -16,6 +16,8 @@ public class GlobalPropertiesConfig {
 	
 	public final static DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#,##0.0000");
 	
+	private final TradingEngineManager tradingEngineManager = new TradingEngineManager(); 
+	
 	private final static String BTC_MXN = "btc_mxn";
 	
 	private int limitOrdersToDisplay = 25;
@@ -24,7 +26,9 @@ public class GlobalPropertiesConfig {
 	
 	private String bookName = BTC_MXN;
 	
-	private List<LimitOrderObserver> limitOrderObservers = new ArrayList<>();
+	private List<LimitObserver> limitOrderObservers = new ArrayList<>();
+
+	private List<LimitObserver> limitTradesObservers = new ArrayList<>();
 	
 	private GlobalPropertiesConfig() {
 	}
@@ -33,9 +37,9 @@ public class GlobalPropertiesConfig {
 		return INSTANCE;
 	}
 	
-	public void addLimitOrderObserver(LimitOrderObserver limitOrderObserver) {
-		limitOrderObservers.add(limitOrderObserver);
-		limitOrderObserver.update(limitOrdersToDisplay);
+	public void addLimitOrderObserver(LimitObserver limitObserver) {
+		limitOrderObservers.add(limitObserver);
+		limitObserver.update(limitOrdersToDisplay);
 	}
 	
 	public void setLimitOrdersToDisplay(int limitOrdersToDisplay) {
@@ -55,12 +59,22 @@ public class GlobalPropertiesConfig {
 		return bookName;
 	}
 	
+	public void addLimitTradesObserver(LimitObserver limitObserver) {
+		limitTradesObservers.add(limitObserver);
+		limitObserver.update(tradesToDisplay);
+	}
+	
 	public int getTradesToDisplay() {
 		return tradesToDisplay;
 	}
 	
 	public void setTradesToDisplay(int tradesToDisplay) {
 		this.tradesToDisplay = tradesToDisplay;
+		limitTradesObservers.stream().forEach(o -> o.update(tradesToDisplay));
+	}
+	
+	public TradingEngineManager getTradingEngineManager() {
+		return tradingEngineManager;
 	}
 	
 	public void update(PropertiesModel propertiesModel) {
