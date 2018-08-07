@@ -25,6 +25,12 @@ public class PropertiesDialogController implements Initializable {
 	@FXML
 	private TextField trades2Display;
 	
+	@FXML
+	private TextField upticks;
+	
+	@FXML
+	private TextField downticks;
+	
 	private PropertiesModel propertiesModel;
 
 	@Override
@@ -36,11 +42,15 @@ public class PropertiesDialogController implements Initializable {
 		String book = GlobalPropertiesConfig.getInstance().getBookName();
 		int orders = GlobalPropertiesConfig.getInstance().getLimitOrdersToDisplay();
 		int trades = GlobalPropertiesConfig.getInstance().getTradesToDisplay();
+		int upticks = GlobalPropertiesConfig.getInstance().getUpticks();
+		int downticks = GlobalPropertiesConfig.getInstance().getDownticks();
 		
-		propertiesModel = new PropertiesModel(book, orders, trades);
+		propertiesModel = new PropertiesModel(book, orders, trades, downticks, upticks);
 		bookName.textProperty().bind(propertiesModel.bookName());
 		orders2Display.textProperty().bindBidirectional(propertiesModel.orders(), new NumberStringConverter());
 		trades2Display.textProperty().bindBidirectional(propertiesModel.trades(), new NumberStringConverter());
+		this.upticks.textProperty().bindBidirectional(propertiesModel.upticks(), new NumberStringConverter());
+		this.downticks.textProperty().bindBidirectional(propertiesModel.downticks(), new NumberStringConverter());
 	}
 
 	public static Dialog<PropertiesModel> getNewDialog(ResourceBundle resources) {

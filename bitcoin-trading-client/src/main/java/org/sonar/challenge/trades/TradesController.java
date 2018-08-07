@@ -70,12 +70,14 @@ public class TradesController implements Initializable, LimitObserver, TradingEn
 		itemAmountCol.setCellValueFactory(new PropertyValueFactory<Trade, BigDecimal>("amount"));
 		itemAmountCol.setCellFactory(col -> createBigDecimalFormatterCell());
 
-		data = FXCollections.observableArrayList();
+		data = FXCollections.synchronizedObservableList(FXCollections.observableArrayList());
 		tradesTbl.setItems(data);
 
 		setLabels(name);
 
 		GlobalPropertiesConfig.getInstance().addLimitTradesObserver(this);
+		GlobalPropertiesConfig.getInstance().addLimitDownticksObserver(l -> initTradesEngine());
+		GlobalPropertiesConfig.getInstance().addLimitUpticksObserver(l -> initTradesEngine());
 		initTradesEngine();
 	}
 
@@ -103,8 +105,12 @@ public class TradesController implements Initializable, LimitObserver, TradingEn
 				.bookName(GlobalPropertiesConfig.getInstance().getBookName()).inherateStateFrom(tradingEngine).build();
 		tradingEngine.addListener(this);
 		tradingEngine.addOrderIssuer(new DoNothingOrderIssuerImpl());
-		// TODO Alvaro: Add the specific trading strategy
-		tradingEngine.addTradingStrategyFactory(new DefaultTradingStrategyFactory());
+
+		{
+			int downticks = GlobalPropertiesConfig.getInstance().getDownticks();
+			int upticks = GlobalPropertiesConfig.getInstance().getUpticks();
+			tradingEngine.addTradingStrategyFactory(new DefaultTradingStrategyFactory(upticks, downticks));
+		}
 
 		GlobalPropertiesConfig.getInstance().getTradingEngineManager().execute(tradingEngine);
 	}

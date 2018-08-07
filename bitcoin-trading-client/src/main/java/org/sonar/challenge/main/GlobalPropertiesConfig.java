@@ -24,11 +24,19 @@ public class GlobalPropertiesConfig {
 	
 	private int tradesToDisplay = 25;
 	
+	private int downticks = 5;
+	
+	private int upticks = 5;
+	
 	private String bookName = BTC_MXN;
 	
 	private List<LimitObserver> limitOrderObservers = new ArrayList<>();
 
 	private List<LimitObserver> limitTradesObservers = new ArrayList<>();
+	
+	private List<LimitObserver> limitUpticksObservers = new ArrayList<>();
+
+	private List<LimitObserver> limitDownticksObservers = new ArrayList<>();
 	
 	private GlobalPropertiesConfig() {
 	}
@@ -49,6 +57,34 @@ public class GlobalPropertiesConfig {
 	
 	public int getLimitOrdersToDisplay() {
 		return limitOrdersToDisplay;
+	}
+	
+	public void addLimitDownticksObserver(LimitObserver limitObserver) {
+		limitDownticksObservers.add(limitObserver);
+		limitObserver.update(downticks);
+	}
+	
+	public void addLimitUpticksObserver(LimitObserver limitObserver) {
+		limitUpticksObservers.add(limitObserver);
+		limitObserver.update(upticks);
+	}
+	
+	public void setDownticks(int downticks) {
+		this.downticks = downticks;
+		limitDownticksObservers.stream().forEach(o -> o.update(downticks));
+	}
+	
+	public int getDownticks() {
+		return downticks;
+	}
+	
+	public void setUpticks(int upticks) {
+		this.upticks = upticks;
+		limitUpticksObservers.stream().forEach(o -> o.update(upticks));
+	}
+	
+	public int getUpticks() {
+		return upticks;
 	}
 	
 	private void setBookName(String bookName) {

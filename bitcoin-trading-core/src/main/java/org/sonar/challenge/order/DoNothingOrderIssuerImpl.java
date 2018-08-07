@@ -20,6 +20,7 @@ public final class DoNothingOrderIssuerImpl implements OrderIssuer {
 			orderBatch.getNewOrdersToPlace().stream().filter(o -> o != null).forEach(o -> {
 				listeners.stream().forEach(l -> l.beforeIssuingOrder(o));
 				// Do nothing
+				System.out.println("ISSUEING FOR " + o);
 				listeners.stream().forEach(l -> l.afterIssuingOrder(o));
 			});
 		}

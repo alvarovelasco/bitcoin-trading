@@ -32,6 +32,20 @@
             </Label>
             <TextField layoutX="15.0" layoutY="162.0" prefHeight="26.0" prefWidth="456.0" id="tradesTxtField"
             	fx:id="trades2Display"/>
+            <Label layoutX="14.0" layoutY="137.0" text="%properties.label.downticks" AnchorPane.leftAnchor="15.0">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <TextField layoutX="15.0" layoutY="162.0" prefHeight="26.0" prefWidth="456.0" id="downticksTxtField"
+            	fx:id="downticks"/>
+            <Label layoutX="14.0" layoutY="137.0" text="%properties.label.upticks" AnchorPane.leftAnchor="15.0">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Label>
+            <TextField layoutX="15.0" layoutY="162.0" prefHeight="26.0" prefWidth="456.0" id="upticksTxtField"
+            	fx:id="upticks"/>
          </children>
          </AnchorPane>
     </header>

@@ -117,7 +117,6 @@ public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 			while (tradeList.size() > limit) {
 				tradeList.remove(limit);
 			}
-			
 			// Notify listeners
 			listeners.stream().forEach(l -> l.onTradeListChange(oldTradeList, tradeList));
 		} catch (Exception e) {
@@ -136,6 +135,12 @@ public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 		return tradesRequest;
 	}
 	
+	/**
+	 * Small class that stores all the orders after being issued, and provides a method for 
+	 * dequeing it and clear the buffer.
+	 * @author alvarovelascofernandez
+	 *
+	 */
 	static class OrderIssuerToTradeList implements OrderIssuerListener {
 
 		private final List<Trade> trades = new ArrayList<>();
@@ -153,6 +158,10 @@ public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 				build());
 		}
 		
+		/**
+		 * Cleans the internal buffer and then return its old content
+		 * @return Old content of the internal buffer
+		 */
 		public List<Trade> dequeueTrades() {
 			List<Trade> newTradesList = new ArrayList<>(trades);
 			trades.clear();
