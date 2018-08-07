@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.sonar.challenge.book.Trade;
 
-public class DefaultTradingStrategyFactory implements TradingStrategyFactory<DefaultTradingStrategy, Trade>{
+public class DefaultTradingStrategyFactory implements TradingStrategyFactory<Trade>{
 
 	public DefaultTradingStrategy getStrategy(Trade... trades) {
 		List<Trade> tradesList = new ArrayList<>();

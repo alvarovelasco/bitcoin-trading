@@ -2,7 +2,7 @@ package org.sonar.challenge.order;
 
 import java.util.ArrayList;
 import java.util.List;
-//TODO AVF: Unit testing
+
 public final class DoNothingOrderIssuerImpl implements OrderIssuer {
 
 	private List<OrderIssuerListener> listeners = new ArrayList<>();
