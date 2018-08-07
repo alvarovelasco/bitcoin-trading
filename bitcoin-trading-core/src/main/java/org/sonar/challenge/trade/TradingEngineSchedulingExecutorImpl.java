@@ -9,11 +9,21 @@ import java.util.concurrent.TimeUnit;
 
 import org.sonar.challenge.rest.BitsoTradesRESTRequest;
 
-// TODO AVF: Unit test
-public class TradingEngineSchedulingExecutorImpl implements TradingEngineExecutor<ScheduledExecutorService> {
+/**
+ * 
+ * Executes a trading engine runnable instance at a new {@link ScheduledExecutorService} whose delay is 
+ * set up at the constructor
+ * 
+ * @author Alvaro Velasco
+ *
+ */
+public final class TradingEngineSchedulingExecutorImpl implements TradingEngineExecutor<ScheduledExecutorService> {
 
 	private final Duration duration;
 
+	/**
+	 * @param duration Implicit delay on the scheduled executor of trading engine
+	 */
 	TradingEngineSchedulingExecutorImpl(Duration duration) {
 		this.duration = duration;
 	}

@@ -13,6 +13,7 @@ import org.sonar.challenge.order.OrderBatch;
 import org.sonar.challenge.order.OrderIssuer;
 import org.sonar.challenge.order.OrderIssuerListener;
 import org.sonar.challenge.rest.BitsoTradesRESTRequest;
+import org.sonar.challenge.rest.SimpleRESTRequest;
 import org.sonar.challenge.strategy.TradingStrategy;
 import org.sonar.challenge.strategy.TradingStrategyFactory;
 import org.sonar.challenge.util.GSonBuilder;
@@ -24,14 +25,12 @@ import org.sonar.challenge.util.GSonBuilder;
  * 
  * 
  * @author Alvaro Velasco
- *
  */
-//TODO AVF: Unit testing
 public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 
 	private final List<Trade> tradeList = new ArrayList<>();
 
-	private final BitsoTradesRESTRequest tradesRequest;
+	private final SimpleRESTRequest tradesRequest;
 	
 	private final List<TradingEngineListener> listeners = new ArrayList<>();
 	
@@ -43,7 +42,7 @@ public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 	
 	private final int limit;
 
-	TradingEngineImpl(BitsoTradesRESTRequest tradesRequest, int limit) {
+	TradingEngineImpl(SimpleRESTRequest tradesRequest, int limit) {
 		this.tradesRequest = Objects.requireNonNull(tradesRequest);
 		this.limit = limit;
 	}
@@ -70,7 +69,6 @@ public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 		try {
 			List<Trade> oldTradeList = new ArrayList<>(tradeList);
 			
-			
 			// Get the new list with trades
 			String tradesString = tradesRequest.request();
 			TradeResultDecoder tradeResult = GSonBuilder.buildStandardGson().fromJson(tradesString,
@@ -94,7 +92,6 @@ public class TradingEngineImpl implements TradingEngine<TradingEngineImpl> {
 			
 			// Add the fresh new trades to our list
 			freshTradesList.stream().forEach(t -> tradeList.add(0, t));
-
 
 			final Trade[] tradeArr = tradeList.toArray(new Trade[tradeList.size()]);
 			// From the current trade list apply strategy and collect new orders

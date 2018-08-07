@@ -13,7 +13,7 @@ import org.sonar.challenge.order.OrderBatch;
 import org.sonar.challenge.order.OrderType;
 
 // TODO AVF: Unit testing
-public final class DefaultTradingStrategy implements TradingStrategy {
+public class DefaultTradingStrategy implements TradingStrategy {
 
 	private final int downticksLimit;
 	
