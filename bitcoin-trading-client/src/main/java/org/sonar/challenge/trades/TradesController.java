@@ -89,9 +89,11 @@ public class TradesController implements Initializable, LimitObserver, TradingEn
 
 	@Override
 	public void onTradeListChange(List<Trade> oldList, List<Trade> newTradeList) {
-		if (newTradeList != null && !newTradeList.equals(oldList)) {
-			data.clear();
-			data.addAll(newTradeList);
+		synchronized (data) {
+			if (newTradeList != null && !newTradeList.equals(oldList)) {
+				data.clear();
+				data.addAll(newTradeList);
+			}
 		}
 	}
 

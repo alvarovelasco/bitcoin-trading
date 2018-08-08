@@ -53,7 +53,7 @@ public class OrderBookRESTProvideToContextCommandExecutor implements CommandExec
 	
 	public void execute() throws SonarChallengeException {
 		String content = simpleRESTRequest.request();
-		
+
 		OrderBookDecoder decoder = GSonBuilder.buildStandardGson().fromJson(content, OrderBookDecoder.class);
 		OrderBook orderBook = transformer.transform(decoder);
 		context.setOrderBook(orderBook);

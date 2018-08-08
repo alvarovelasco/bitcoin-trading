@@ -1,10 +1,13 @@
 package org.sonar.challenge.book.json;
 
+import java.math.RoundingMode;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.sonar.challenge.book.OrderBook;
 import org.sonar.challenge.book.json.DiffOrderDecoder.PayloadOrder;
@@ -53,7 +56,8 @@ public class TransformerFactory {
 	public Transformer<DiffOrderDecoder, OrderBook> getDiffOrderDecoderTransformer() {
 		return new Transformer<DiffOrderDecoder, OrderBook>() {
 
-			private final Function<PayloadOrder, Order> transformerFunction = po -> new Order(po.getValue(),
+			private final Function<PayloadOrder, Order> transformerFunction = po -> new Order(
+					po.getValue().divide(po.getAmount(), 2, RoundingMode.HALF_UP),
 					po.getAmount(),
 					tranformToOrderType.transform(po.getType()),
 					Instant.ofEpochMilli(po.getTimestamp()).atZone(ZoneId.systemDefault()).toLocalDateTime());
@@ -62,14 +66,21 @@ public class TransformerFactory {
 			public OrderBook transform(DiffOrderDecoder origin) {
 				OrderBook orderBook = new OrderBook(origin.getBook(), origin.getSequence());
 
-				origin.getPayload().stream().filter(Objects::nonNull)
-						.filter(po -> DiffOrderMessageType.BUY.getNumber() == po.getType())
-						.filter(po -> Objects.equals(DiffOrderState.OPEN, po.getState())).map(transformerFunction)
-						.forEach(o -> orderBook.addAsk(o));
-				origin.getPayload().stream().filter(Objects::nonNull)
-						.filter(po -> DiffOrderMessageType.SELL.getNumber() == po.getType())
-						.filter(po -> Objects.equals(DiffOrderState.OPEN, po.getState())).map(transformerFunction)
-						.forEach(o -> orderBook.addBid(o));
+				List<PayloadOrder> filteredPayloadOrders =
+						origin.getPayload().stream().
+							filter(Objects::nonNull).
+							filter(po -> Objects.equals(DiffOrderState.OPEN, po.getState())).
+						collect(Collectors.toList());
+				
+				filteredPayloadOrders.stream().
+						filter(po -> DiffOrderMessageType.BUY.getNumber() == po.getType()).
+							map(transformerFunction).
+							forEach(o -> orderBook.addAsk(o));
+				
+				filteredPayloadOrders.stream().
+						filter(po -> DiffOrderMessageType.SELL.getNumber() == po.getType()).
+							map(transformerFunction).
+							forEach(o -> orderBook.addBid(o));
 
 				return orderBook;
 			}
