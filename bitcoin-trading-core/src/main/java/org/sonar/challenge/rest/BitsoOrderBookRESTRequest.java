@@ -16,7 +16,7 @@ public class BitsoOrderBookRESTRequest extends BaseBitsoRESTRequest  {
 	
 	private final static String BOOK = "book";
 	
-	private final static String REQUIRED = "required";
+	private final static String AGGREGATE = "aggregate";
 	
 	public BitsoOrderBookRESTRequest(String orderBook) {
 		this.orderBook = requireNonNull(orderBook);
@@ -26,7 +26,7 @@ public class BitsoOrderBookRESTRequest extends BaseBitsoRESTRequest  {
 	List<NameValuePair> getRequestParameters() {
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair(BOOK, orderBook));
-		params.add(new BasicNameValuePair(REQUIRED, Boolean.FALSE.toString()));
+		params.add(new BasicNameValuePair(AGGREGATE, Boolean.TRUE.toString()));
 		
 		return params;
 	}

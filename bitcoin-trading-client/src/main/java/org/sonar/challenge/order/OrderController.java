@@ -1,6 +1,5 @@
 package org.sonar.challenge.order;
 
-
 import static org.sonar.challenge.main.GlobalPropertiesConfig.DECIMAL_FORMAT;
 import static org.sonar.challenge.main.GlobalPropertiesConfig.FORMATTER;
 
@@ -31,7 +30,7 @@ public class OrderController implements Initializable, LimitObserver {
 
 	@FXML
 	private TableView<Order> ordersTbl;
-	
+
 	@FXML
 	private Label ordersLbl;
 
@@ -45,15 +44,22 @@ public class OrderController implements Initializable, LimitObserver {
 	private TableColumn<Order, LocalDateTime> itemTimeCol;
 
 	private ObservableList<Order> data;
-	
+
 	private final String name;
-	
+
 	private int limitOrdersToDisplay;
-	
+
+	private Comparator<Order> comparator = (o1, o2) -> {
+		BigDecimal order1Value = o1.getPrice();
+		BigDecimal order2Value = o2.getPrice();
+
+		return order2Value.compareTo(order1Value);
+	};
+
 	public OrderController() {
 		this("");
 	}
-	
+
 	OrderController(String name) {
 		this.name = name;
 	}
@@ -65,53 +71,50 @@ public class OrderController implements Initializable, LimitObserver {
 		itemAmountCol.setCellValueFactory(new PropertyValueFactory<Order, BigDecimal>("amount"));
 		itemAmountCol.setCellFactory(col -> createBigDecimalFormatterCell());
 		itemTimeCol.setCellValueFactory(new PropertyValueFactory<Order, LocalDateTime>("timestamp"));
-		itemTimeCol.setCellFactory(col ->  new TableCell<Order, LocalDateTime>() {
-		    @Override
-		    protected void updateItem(LocalDateTime item, boolean empty) {
+		itemTimeCol.setCellFactory(col -> new TableCell<Order, LocalDateTime>() {
+			@Override
+			protected void updateItem(LocalDateTime item, boolean empty) {
 
-		        super.updateItem(item, empty);
-		        if (empty)
-		            setText(null);
-		        else
-		            setText(String.format(item.format(FORMATTER)));
-		    }
+				super.updateItem(item, empty);
+				if (empty)
+					setText(null);
+				else
+					setText(String.format(item.format(FORMATTER)));
+			}
 		});
 
 		data = FXCollections.observableArrayList();
 		ordersTbl.setItems(data);
-		
+
 		setLabels(name);
-		
-		GlobalPropertiesConfig.getInstance().addLimitOrderObserver(this);
+
+		GlobalPropertiesConfig.getInstance().addLimitPositionsObserver(this);
 	}
 
 	@Override
 	public void update(int limit) {
 		this.limitOrdersToDisplay = limit;
 	}
-	
+
 	void setLabels(String name) {
 		ordersLbl.setText(name);
 	}
 	
+	void displayReverseOrder() {
+		comparator = comparator.reversed();
+	}
+
 	Parent getParentRoot() {
 		return ordersTbl.getParent();
 	}
-	
+
 	void updateWithNewData(List<Order> newOrders) {
 		List<Order> newList = new ArrayList<>(data);
 		newList.addAll(newOrders);
-		
-		newList = newList.stream().sorted(new Comparator<Order>() {
-			@Override
-			public int compare(Order o1, Order o2) {
-				BigDecimal order1Value = o1.getAmount().multiply(o1.getPrice());
-				BigDecimal order2Value = o2.getAmount().multiply(o2.getPrice()); 
-				
-				return order2Value.compareTo(order1Value);
-			}
-		}).limit(limitOrdersToDisplay).collect(Collectors.toList());
-		
+
+		newList = newList.stream().sorted(comparator).
+				limit(limitOrdersToDisplay).collect(Collectors.toList());
+
 		data.clear();
 		data.addAll(newList);
 	}

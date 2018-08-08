@@ -61,7 +61,6 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 		if (!Objects.equals(SubscriptionTypes.DIFF_ORDERS.getKeyword(), d.getType()) || Objects.isNull(d.getBook())) {
 			return;
 		}
-
 		OrderBook transformedOrderBook = TransformerFactory.getInstance().getDiffOrderDecoderTransformer().transform(d);
 
 		OrderBook updatedBook = DiffOrderMergeIntoOrderBookCommandExecutor.merge(context.getOrderBook(),
@@ -71,7 +70,7 @@ public class DiffOrderOnBookSubscribeFeederImpl implements SubscribeFeeder<Updat
 				transformedOrderBook.getAsks());
 
 		logger.debug(" Updated order book {} ", updatedOrderBook);
-		if (!updatedOrderBook.getNewAsks().isEmpty() || !updatedOrderBook.getNewBids().isEmpty()) {
+		if (! (updatedOrderBook.getNewAsks().isEmpty() && updatedOrderBook.getNewBids().isEmpty())) {
 			notifySubscriptors(updatedOrderBook);
 		}
 	};

@@ -34,7 +34,7 @@ public class PropertiesDialogController implements Initializable {
 
 	private void initModel() {
 		String book = GlobalPropertiesConfig.getInstance().getBookName();
-		int orders = GlobalPropertiesConfig.getInstance().getLimitOrdersToDisplay();
+		int orders = GlobalPropertiesConfig.getInstance().getLimitPositionsToDisplay();
 		int trades = GlobalPropertiesConfig.getInstance().getTradesToDisplay();
 		
 		propertiesModel = new PropertiesModel(book, orders, trades);

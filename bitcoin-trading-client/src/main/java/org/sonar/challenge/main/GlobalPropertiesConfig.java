@@ -20,13 +20,13 @@ public class GlobalPropertiesConfig {
 	
 	private final static String BTC_MXN = "btc_mxn";
 	
-	private int limitOrdersToDisplay = 25;
+	private int limitPositionsToDisplay = 60;
 	
 	private int tradesToDisplay = 25;
 	
 	private String bookName = BTC_MXN;
 	
-	private List<LimitObserver> limitOrderObservers = new ArrayList<>();
+	private List<LimitObserver> limitPositionObservers = new ArrayList<>();
 
 	private List<LimitObserver> limitTradesObservers = new ArrayList<>();
 	
@@ -37,18 +37,18 @@ public class GlobalPropertiesConfig {
 		return INSTANCE;
 	}
 	
-	public void addLimitOrderObserver(LimitObserver limitObserver) {
-		limitOrderObservers.add(limitObserver);
-		limitObserver.update(limitOrdersToDisplay);
+	public void addLimitPositionsObserver(LimitObserver limitObserver) {
+		limitPositionObservers.add(limitObserver);
+		limitObserver.update(limitPositionsToDisplay);
 	}
 	
-	public void setLimitOrdersToDisplay(int limitOrdersToDisplay) {
-		this.limitOrdersToDisplay = limitOrdersToDisplay;
-		limitOrderObservers.stream().forEach(o -> o.update(limitOrdersToDisplay));
+	public void setLimitPositionsToDisplay(int limitPositionsToDisplay) {
+		this.limitPositionsToDisplay = limitPositionsToDisplay;
+		limitPositionObservers.stream().forEach(o -> o.update(limitPositionsToDisplay));
 	}
 	
-	public int getLimitOrdersToDisplay() {
-		return limitOrdersToDisplay;
+	public int getLimitPositionsToDisplay() {
+		return limitPositionsToDisplay;
 	}
 	
 	private void setBookName(String bookName) {
@@ -81,7 +81,7 @@ public class GlobalPropertiesConfig {
 		Objects.requireNonNull(propertiesModel);
 		
 		setBookName(propertiesModel.getBookName()); 
-		setLimitOrdersToDisplay(propertiesModel.getOrders());
+		setLimitPositionsToDisplay(propertiesModel.getOrders());
 		setTradesToDisplay(propertiesModel.getTrades());
 	}
 	

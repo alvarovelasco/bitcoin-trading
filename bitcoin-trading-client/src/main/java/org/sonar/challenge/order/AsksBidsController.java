@@ -54,20 +54,21 @@ public class AsksBidsController implements Initializable, LimitObserver {
 		AnchorPane bids = fxmlLoader.load();
 		this.bidsController = fxmlLoader.getController();
 		this.bidsController.setLabels(resources.getString("orderTbl.nameLbl.bids"));
+		this.bidsController.displayReverseOrder();
 
 		fxmlLoader = new FXMLLoader(OrderController.class.getResource("Order.fxml"));
 		AnchorPane asks = fxmlLoader.load();
 		this.asksController = fxmlLoader.getController();
 		this.asksController.setLabels(resources.getString("orderTbl.nameLbl.asks"));
 		
-		hboxAsksBids.getChildren().add(bids);
-		hboxAsksBids.getChildren().add(new SplitPane());
 		hboxAsksBids.getChildren().add(asks);
+		hboxAsksBids.getChildren().add(new SplitPane());
+		hboxAsksBids.getChildren().add(bids);
 
 		HBox.setHgrow(bids, Priority.ALWAYS);
 		HBox.setHgrow(asks, Priority.ALWAYS);
 		
-		GlobalPropertiesConfig.getInstance().addLimitOrderObserver(this);
+		GlobalPropertiesConfig.getInstance().addLimitPositionsObserver(this);
 	}
 
 	private void refresh(UpdatedOrderBook updatedOrderBook) {
