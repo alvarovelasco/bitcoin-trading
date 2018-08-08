@@ -24,7 +24,7 @@ import org.sonar.challenge.websocket.BitsoSubscriber.Handler;
 import org.sonar.challenge.websocket.SubscriptionTypes;
 
 /**
- * 
+ * Class subscribing to feeder on the diff-order channel.
  * @author Alvaro Velasco
  *
  */
