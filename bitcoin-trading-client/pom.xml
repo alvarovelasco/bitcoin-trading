@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<modelVersion>4.0.0</modelVersion>
@@ -12,7 +13,9 @@
 		<artifactId>bitcoin-trading</artifactId>
 		<version>0.0.1</version>
 	</parent>
-
+	<properties>
+		<coreVersion>0.0.1</coreVersion>
+	</properties>
 	<build>
 		<plugins>
 			<plugin>
@@ -23,6 +26,33 @@
 					<source>1.8</source>
 					<target>1.8</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<descriptors>
+						<descriptor>src/resource/exec_assembly_desc.xml</descriptor>
+					</descriptors>
+					<archive>
+						<manifest>
+							<mainClass>org.sonar.challenge.main.Main</mainClass>
+						</manifest>
+						<manifestEntries>
+							<Built-By>Alvaro</Built-By>
+						</manifestEntries>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

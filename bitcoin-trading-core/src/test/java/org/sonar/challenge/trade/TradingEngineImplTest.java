@@ -24,6 +24,8 @@ import org.sonar.challenge.order.OrderIssuer;
 import org.sonar.challenge.rest.SimpleRESTRequest;
 import org.sonar.challenge.strategy.DefaultTradingStrategy;
 import org.sonar.challenge.strategy.DefaultTradingStrategyFactory;
+import org.sonar.challenge.strategy.TickCounter;
+import org.sonar.challenge.strategy.TickCounterImpl;
 
 public class TradingEngineImplTest {
 
@@ -87,6 +89,10 @@ public class TradingEngineImplTest {
 		TradingEngineImpl engineImpl = new TradingEngineImpl(mockedRestRequest, TRADE_LIMIT);
 
 		return engineImpl;
+	}
+	
+	private TickCounter getTickCounter() {
+		return new TickCounterImpl(2, 2);
 	}
 	
 	@Before
@@ -187,7 +193,8 @@ public class TradingEngineImplTest {
 			assertEquals(2, newL.size());
 		});
 
-		engineImpl.addTradingStrategyFactory(new DefaultTradingStrategyFactory());
+		
+		engineImpl.addTradingStrategyFactory(new DefaultTradingStrategyFactory(getTickCounter()));
 
 		engineImpl.run();
 	}
@@ -203,7 +210,7 @@ public class TradingEngineImplTest {
 			assertEquals(2, newL.size());
 		});
 		engineImpl.addListener(assertListener);
-		engineImpl.addTradingStrategyFactory(new DefaultTradingStrategyFactory());
+		engineImpl.addTradingStrategyFactory(new DefaultTradingStrategyFactory(getTickCounter()));
 
 		engineImpl.run();
 

@@ -8,13 +8,10 @@ import org.sonar.challenge.book.Trade;
 
 public class DefaultTradingStrategyFactory implements TradingStrategyFactory<Trade>{
 
-	private final int mExpectedUpticksBoundary ;
+	private final TickCounter tickCounter;
 	
-	private final int mExpectedDownticksBoundary;
-	
-	public DefaultTradingStrategyFactory(int expectedUpBoundary, int expectedDownBoundary) {
-		this.mExpectedDownticksBoundary = expectedDownBoundary;
-		this.mExpectedUpticksBoundary = expectedUpBoundary;
+	public DefaultTradingStrategyFactory(TickCounter tickCounter) {
+		this.tickCounter = tickCounter;
 	}
 	
 	
@@ -27,8 +24,7 @@ public class DefaultTradingStrategyFactory implements TradingStrategyFactory<Tra
 		// this seems a bit stupid because there is only one strategy type.
 		return new DefaultTradingStrategy(tradesList, 
 						new TradeTickResolverImpl(),
-						mExpectedUpticksBoundary,
-						mExpectedDownticksBoundary);
+						tickCounter);
 	}
 	
 }

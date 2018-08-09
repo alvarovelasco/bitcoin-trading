@@ -16,6 +16,7 @@ import org.sonar.challenge.main.LimitObserver;
 import org.sonar.challenge.order.DoNothingOrderIssuerImpl;
 import org.sonar.challenge.order.OrderBatch;
 import org.sonar.challenge.strategy.DefaultTradingStrategyFactory;
+import org.sonar.challenge.strategy.TickCounterImpl;
 import org.sonar.challenge.strategy.TradingStrategyFactory;
 import org.sonar.challenge.trade.TradingEngineImpl;
 import org.sonar.challenge.trade.TradingEngineImplBuilder;
@@ -111,7 +112,7 @@ public class TradesController implements Initializable, LimitObserver, TradingEn
 		{
 			int downticks = GlobalPropertiesConfig.getInstance().getDownticks();
 			int upticks = GlobalPropertiesConfig.getInstance().getUpticks();
-			tradingEngine.addTradingStrategyFactory(new DefaultTradingStrategyFactory(upticks, downticks));
+			tradingEngine.addTradingStrategyFactory(new DefaultTradingStrategyFactory(new TickCounterImpl(downticks, upticks)));
 		}
 
 		GlobalPropertiesConfig.getInstance().getTradingEngineManager().execute(tradingEngine);

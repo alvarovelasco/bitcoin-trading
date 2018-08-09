@@ -15,25 +15,21 @@ import org.sonar.challenge.order.OrderType;
 // TODO AVF: Unit testing
 public class DefaultTradingStrategy implements TradingStrategy {
 
-	private final int downticksLimit;
-	
-	private final int upticksLimit;
-	
 	private final TradeTickResolver tradeTickResolver;
 	
 	private final List<Trade> trades ;
 	
+	private final TickCounter tickCounter;
+	
 	public DefaultTradingStrategy(List<Trade> trades, TradeTickResolver tradeTickResolver,
-			int downticksLimit, int upticksLimit) {
+			TickCounter tickCounter) {
 		this.trades = Objects.requireNonNull(trades);
 		this.tradeTickResolver = tradeTickResolver;
-		this.downticksLimit = downticksLimit;
-		this.upticksLimit = upticksLimit;
+		this.tickCounter = tickCounter;
 	}
 	
 	@Override
 	public OrderBatch resolveOrders() {
-		int generalCounter = 0;
 		Ticks firstTick = null;
 		boolean issueOrder = false;
 		
@@ -47,7 +43,7 @@ public class DefaultTradingStrategy implements TradingStrategy {
 				if (firstTick != null && !firstTick.equals(tick.get())) {
 					break;
 				}
-				if (getLimit(tick.get()) == ++generalCounter) {
+				if (!tickCounter.countAndCheckCounterUnderLimit(tick.get())) {
 					issueOrder = true;
 					break;
 				}
@@ -63,15 +59,6 @@ public class DefaultTradingStrategy implements TradingStrategy {
 		}
 
 		return new OrderBatch(orders);
-	}
-	
-	private int getLimit(Ticks tick) {
-		Objects.requireNonNull(tick);
-		if (Ticks.UPTICK.equals(tick)) {
-			return upticksLimit;
-		} else {
-			return downticksLimit;
-		}
 	}
 	
 	private OrderType getOrderType(Ticks tick) {

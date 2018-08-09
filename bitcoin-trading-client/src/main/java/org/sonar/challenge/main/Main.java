@@ -1,8 +1,12 @@
 package org.sonar.challenge.main;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import org.sonar.challenge.order.AsksBidsController;
+import org.sonar.challenge.trades.TradesController;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -45,8 +49,8 @@ public class Main extends Application {
 			BorderPane root = new BorderPane();
 
 			TabPane tabFolder = new TabPane();
-			addTab(tabFolder, "Orders", "../order/AsksBids.fxml");
-			addTab(tabFolder, "Trades", "../trades/Trades.fxml");
+			addTab(tabFolder, "Orders", AsksBidsController.class.getResource("AsksBids.fxml"));
+			addTab(tabFolder, "Trades", TradesController.class.getResource("Trades.fxml"));
 
 			root.setTop(getMenuBar());
 			root.setCenter(tabFolder);
@@ -61,9 +65,9 @@ public class Main extends Application {
 		}
 	}
 
-	private void addTab(TabPane tabFolder, String title, String name) throws IOException {
+	private void addTab(TabPane tabFolder, String title, URL location) throws IOException {
 		// Load root layout from fxml file.
-		FXMLLoader loader = new FXMLLoader(Main.class.getResource(name));
+		FXMLLoader loader = new FXMLLoader(location);
 		loader.setResources(MAIN_RESOURCES_BUNDLE);
 		Parent parentPane = loader.load();
 		Tab tab = new Tab(title);
