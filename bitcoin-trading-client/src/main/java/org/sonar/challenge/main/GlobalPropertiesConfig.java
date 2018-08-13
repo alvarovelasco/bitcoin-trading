@@ -45,6 +45,9 @@ public class GlobalPropertiesConfig {
 		return INSTANCE;
 	}
 	
+	/**
+	 * @param limitObserver position observer of changes on the number of positions (asks, bids) to display)
+	 */
 	public void addLimitPositionsObserver(LimitObserver limitObserver) {
 		limitPositionObservers.add(limitObserver);
 		limitObserver.update(limitPositionsToDisplay);
@@ -55,6 +58,9 @@ public class GlobalPropertiesConfig {
 		limitPositionObservers.stream().forEach(o -> o.update(limitPositionsToDisplay));
 	}
 	
+	/**
+	 * @return Positions to display (bids, asks)
+	 */
 	public int getLimitPositionsToDisplay() {
 		return limitPositionsToDisplay;
 	}
