@@ -18,41 +18,41 @@ Checklist
 
 
 
-Feature											File name						Method name
---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Feature								File name						Method name
+-------------------------------------------------------------------------------------------------------------------------------------------------
 
-Schedule the polling of trades over REST.					TradingEngineManager					<T extends TradingEngine<?>,E extends ExecutorService> void execute(T t, TradingEngineExecutor<E> executor)		
+Schedule the polling of trades over REST.			TradingEngineManager					<T extends TradingEngine<?>,E extends ExecutorService> void execute(T t, TradingEngineExecutor<E> executor)		
 
 
 
 	
-Request a book snapshot over REST.						OrderBookRESTProvideToContextCommandExecutor		execute()
+Request a book snapshot over REST.				OrderBookRESTProvideToContextCommandExecutor		execute()
 
 
 
 
-Listen for diff-orders over websocket.						BitsoSubscriber						subscribe(), onMessage(String msg)
+Listen for diff-orders over websocket.				BitsoSubscriber						subscribe(), onMessage(String msg)
 									
 
 
 
 
-Replay diff-orders.								DiffOrderMergeIntoOrderBookCommandExecutor		execute()
+Replay diff-orders.						DiffOrderMergeIntoOrderBookCommandExecutor		execute()
 
 
 
 
-Use config option X to request  recent trades.					TradesController					update(int limit)
+Use config option X to request  recent trades.			TradesController					update(int limit)
 
 
 
 	
-Use config option X to limit number of ASKs displayed in UI.			AsksBidsController					update(int limit), refresh(UpdatedOrderBook o)
+Use config option X to limit number of ASKs displayed in UI.	AsksBidsController					update(int limit), refresh(UpdatedOrderBook o)
 	
 
 
 
-The loop that causes the trading algorithm to reevaluate.			TradingEngineImpl					run()
+The loop that causes the trading algorithm to reevaluate.	TradingEngineImpl					run()
 
 
 
