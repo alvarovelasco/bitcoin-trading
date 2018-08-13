@@ -1,0 +1,60 @@
+Developed and tested
+=========================
+Java 1.8.0_51
+Maven 3.5.0
+
+
+Instructions for building
+=========================
+
+* Go into project "bitcoin-trading"
+* Run "mvn clean package"
+* Go into "bitcoin-trading-client project" --> cd ../bitcoint-trading-client/target
+* Run "java -jar bitcoin-trading-client-0.0.1-executable.jar"
+
+
+Checklist
+=========================
+
+
+
+Feature											File name						Method name
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Schedule the polling of trades over REST.					TradingEngineManager					<T extends TradingEngine<?>,E extends ExecutorService> void execute(T t, TradingEngineExecutor<E> executor)		
+
+
+
+	
+Request a book snapshot over REST.						OrderBookRESTProvideToContextCommandExecutor		execute()
+
+
+
+
+Listen for diff-orders over websocket.						BitsoSubscriber						subscribe(), onMessage(String msg)
+									
+
+
+
+
+Replay diff-orders.								DiffOrderMergeIntoOrderBookCommandExecutor		execute()
+
+
+
+
+Use config option X to request  recent trades.					TradesController					update(int limit)
+
+
+
+	
+Use config option X to limit number of ASKs displayed in UI.			AsksBidsController					update(int limit), refresh(UpdatedOrderBook o)
+	
+
+
+
+The loop that causes the trading algorithm to reevaluate.			TradingEngineImpl					run()
+
+
+
+
+
